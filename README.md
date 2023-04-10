@@ -1,11 +1,11 @@
-# CS152CompilersProject - Phase 0
-## Language name:
+# CS 152 Compiler Design Project - Phase 0
+## Language name
 cobra
 
-## Extension name:
-.rlv
+## Extension name
+ - .rlv
 
-## Name for the compiler:
+## Name for the compiler
 snake
 
-## Compiler features and code example:
+## Compiler features and code example
