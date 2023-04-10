@@ -26,5 +26,5 @@ The same “ “, but we ignore white spaces
 ## Tokens list
 | Symbol in Language | Token |
 | ------------- | ------------- |
-| Arithmetic Operators | <br /> |
+| Arithmetic Operators <br /> |
 | = | ASSIGN |
