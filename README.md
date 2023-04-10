@@ -9,6 +9,7 @@ cobra
 snake
 
 ## Compiler features and code example
+| | |
 | ------------- | ------------- |
 | Integer scalar variables | digit arr[x, y, z]. |
 | Assignment statements | x = 1. |
@@ -25,5 +26,5 @@ The same “ “, but we ignore white spaces
 ## Tokens list
 | Symbol in Language | Token |
 | ------------- | ------------- |
-| Arithmetic Operators ||
+| Arithmetic Operators | |
 | = | ASSIGN |
