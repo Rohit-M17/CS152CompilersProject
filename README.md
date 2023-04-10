@@ -3,9 +3,14 @@
 cobra
 
 ## Extension name
- - .rlv
+.rlv
 
 ## Name for the compiler
 snake
 
 ## Compiler features and code example
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Integer scalar variables | digit arr[x, y, z]. |
+| Assignment statements | x = 1. |
+
