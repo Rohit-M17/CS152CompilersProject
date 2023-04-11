@@ -42,9 +42,9 @@ body {
   a = 100.
   b = 50.
   c = a sum b.
-  shout c.        ## should print 150
+  shout(c).        ## should print 150
 
 
   d = (c mult (a sum b)).
-  shout d.        ## should print "22500", since 22500 = 150 * 150;
+  shout(d).        ## should print "22500", since 22500 = 150 * 150;
 } body
