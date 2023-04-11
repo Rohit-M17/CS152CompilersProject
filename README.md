@@ -18,14 +18,14 @@
 | Language Feature                                                      | Code Example                                                                                                                     |
 |-----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Integer scalar variables                                              | digit x.                                                                                                                         |
-| One-dimensional arrays of integers                                    | digit arr[x, y, z].                                                                                                              |
+| One-dimensional arrays of integers                                    | digit arr[1, 2, 3].<br>digit arr[] size 5                                                                                                             |
 | Assignment statements                                                 | x = 1.                                                                                                                           |
 | Arithmetic operators (e.g., “+”, “-”, “*”, “/”)                       | sum, sub, mult, div                                                                                                              | 
 | Relational operators (e.g., “<”, “==”, “>”, “!=”)                     | lessthan, equals, greaterthan, notequals                                                                                         |
-| While loop (including "break" and "continue" loop control statements) | during 2 {<br>such x lessthan 3 stop.<br>x = x sub 1.<br>}<br><br>during 2 {<br>such x lessthan 3 continue.<br>x = x sum 1.<br>} |
+| While loop (including "break" and "continue" loop control statements) | during 2 {<br>  such x lessthan 3 stop.<br>x = x sub 1.<br>}<br><br>during 2 {<br>  such x lessthan 3 continue.<br>x = x sum 1.<br>} |
 | If-then-else statements                                               | such x equals y {<br>shout “Hello”.<br>}<br>next {<br>shout “World”.<br>}                                                        |
 | Read and write statements                                             | temp = open(“path/example.txt”, “s”).<br>shout(temp.study())                                                                     |
-| Comments                                                              | // comment<br><br>~<br>Multi-Line<br>comment<br>~                                                                                |
+| Comments                                                              | // comment<br><br>~<br>Multi-Line<br>comment<br>~                                                                          |
 
 ## Valid identifier
 * Identifiers can only contain letters (both upper and lower case), digits, and underscores. The first character must be a letter or underscore
