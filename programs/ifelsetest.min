@@ -1,0 +1,23 @@
+funct main.
+
+params {
+} params
+
+locals {
+  m : digit.
+  n : digit.
+  o : digit.
+} locals
+
+body {
+  read n;
+  if n >=100 then
+    write n;
+  else
+    m := n-1;
+    write m;
+  endif;
+
+write o;
+
+endbody
