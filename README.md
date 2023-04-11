@@ -83,3 +83,4 @@
 | ,                                                                    | COMMA         |
 | //                                                                   | COMMENT       |
 | _                                                                    | UNDERSCORE    |
+| "                                                                    | QUOTATION     |
