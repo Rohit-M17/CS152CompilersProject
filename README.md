@@ -1,12 +1,18 @@
 # CS 152 Compiler Design Project - Phase 0
+
+**Team 14**
+* Rohit Manimaran - 
+* Vishal Menon - 
+* Lorenzo Largacha Sanz - 862396020
+
 ## Language name
-cobra
+* cobra
 
 ## Extension name
-.rlv
+* .rlv
 
 ## Name for the compiler
-snake
+* snake
 
 ## Compiler features and code example
 | Language Feature                                                      | Code Example                                                                                                                     |
@@ -22,19 +28,57 @@ snake
 | Comments                                                              | // comment<br><br>~<br>Multi-Line<br>comment<br>~                                                                                |
 
 ## Valid identifier
-Identifiers can only contain letters (both upper and lower case), digits, and underscores. The first character must be a letter or underscore
+* Identifiers can only contain letters (both upper and lower case), digits, and underscores. The first character must be a letter or underscore
 
 ## Whether your language is case-sensitive or not
-It is not, variables can start with uppercase or lowercase
+* It is not, variables can start with uppercase or lowercase
 
-## What would be whitespces in your language
-Spaces, tabs and newlines are whitespaces in Cobra. Indenting does not matter
+## What would be white spaces in your language?
+* Spaces, tabs and newlines are whitespaces in Cobra. Indenting does not matter
 
 ## Tokens list
-| Symbol in Language       | Token  |
-|--------------------------|--------|
-| **Arithmetic Operators** |        |
-| =                        | ASSIGN |
-| sum                      | ADD    | 
-|                          |        |
+| Symbol in Language                                                   | Token         |
+|----------------------------------------------------------------------|---------------|
+| <center> Arithmetic Operators </center>                              |               |
+| =                                                                    | ASSIGN        |
+| sum                                                                  | ADD           | 
+| sub                                                                  | SUB           |
+| mult                                                                 | MULT          | 
+| div                                                                  | DIV           | 
+| mod                                                                  | MOD           |
+| <center> Comparison Operators </center>                              |               | 
+| equals                                                               | EQ            | 
+| notequals                                                            | NEQ           |
+| lessthan                                                             | LT            | 
+| greaterthan                                                          | GT            | 
+| lessorequal                                                          | LTE           |
+| greaterorequal                                                       | GTE           | 
+| <center> Reserved Words </center>                                    |               |
+| funct                                                                | FUNCTION      | 
+| params {                                                             | BEGIN_PARAMS  | 
+| } params                                                             | END_PARAMS    |
+| locals {                                                             | BEGIN_LOCALS  |
+| } locals                                                             | END_LOCALS    |
+| body {                                                               | BEGIN_BODY    |
+| } body                                                               | END_BODY      |
+| digit                                                                | DIGIT         |
+| arr[]                                                                | ARRAY         |
+| such                                                                 | WHILE         | 
+| next                                                                 | NEXT          |
+| stop                                                                 | STOP          |
+| same                                                                 | SAME          |
+| <center> Identifiers and Symbols </center>                           |               | 
+| identifier (e.g., "aardvark", "BIG_PENGUIN", "fLaMInGo_17", "ot73r") | IDENT XXXX    | 
+| number (e.g., "17", "101", "90210", "0", "8675309")                  | NUMBER XXXX   | 
+| <center> Other Special Symbols </center>                             |               | 
+| .                                                                    | DOT           |
+| :                                                                    | COLON         |
+| (                                                                    | LEFT_PARAN    |
+| )                                                                    | RIGHT_PARAN   |
+| {                                                                    | LEFT_BRACE    |
+| }                                                                    | RIGHT_BRACE   | 
+| [                                                                    | LEFT_BRACKET  | 
+| ]                                                                    | RIGHT_BRACKET |
+| ,                                                                    | COMMA         |
+| //                                                                   | COMMENT       |
 
