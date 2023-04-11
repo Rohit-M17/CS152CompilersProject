@@ -1,27 +1,40 @@
-funct main.
+{\rtf1\ansi\ansicpg1252\cocoartf2708
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww17440\viewh14180\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
 
-params {
-} params
-
-locals {
-  a : digit arr[20].
-  b : digit.
-  c : digit.
-} locals
-
-body {	// main program
-
-  b = 3.
-  c = 5.
-  a[0] = b sum c.
-  shout(a[0]).    // should print out 8
-
-  a[1] = 100.
-  shout(a[1]).    // should print out 100
-
-  a[2] = 200.
-  shout(a[2]).    // should print out 200
-
-  a[3] = a[0] mult (a[1] sum c).
-  shout(a[3]).    // should print out 840; since 840 = 8 * (100+5)
-} body
+\f0\fs26 \cf0 \expnd0\expndtw0\kerning0
+funct main.\
+\
+\pard\pardeftab720\partightenfactor0
+\cf0 params \{\
+\} params\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\partightenfactor0
+\cf0 locals \{\
+  a : digit arr[20].\
+  b : digit.\
+  c : digit.\
+\} locals\
+\
+body \{	// main program\
+\
+  b = 3.\
+  c = 5.\
+  a[0] = b sum c.\
+  shout(a[0]).    // should print out 8\
+\
+  a[1] = 100.\
+  shout(a[1]).    // should print out 100\
+\
+  a[2] = 200.\
+  shout(a[2]).    // should print out 200\
+\
+  a[3] = a[0] mult (a[1] sum c).\
+  shout(a[3]).    // should print out 840; since 840 = 8 * (100+5)\
+\} body\
+}
