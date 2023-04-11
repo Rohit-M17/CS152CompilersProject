@@ -4,25 +4,23 @@ function main.
 params {
 } params
 
-locals{
+locals {
 
 i : digit.
 
-}locals
+} locals
 
-body{
+body {
 
   i = 0.
-  during i lessorequal 10{
-    shout i.
+  during i lessorequal 10 {
+    shout(i).
 
-    such i greaterthan 3{
+    such i greaterthan 3 {
       stop.
-    }such    
-   }during
+    stopif.
 
     i = i sum 1.
+  } during.
 
-  }during.
-
-}body
+} body
