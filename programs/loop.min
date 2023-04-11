@@ -11,10 +11,11 @@ i : digit.
 
 } locals
 
-body{ //main program
+body {
     i = 0.
       during i lessthan 10 {
             i = i sum 1.
-            shout i.
-      }during
-}body
+            shout(i).
+      }during.
+
+} body
