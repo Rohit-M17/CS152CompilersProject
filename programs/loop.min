@@ -1,0 +1,20 @@
+// This is a simple loop that counts from 1 to 10
+
+function main.
+
+params {
+} params
+
+locals {
+
+i : digit.
+
+} locals
+
+body{ //main program
+    i = 0.
+      during i lessthan 10 {
+            i = i sum 1.
+            shout i.
+      }during
+}body
