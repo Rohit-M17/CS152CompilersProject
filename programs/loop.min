@@ -1,0 +1,28 @@
+// This is a simple loop with a break statement
+
+function main.
+params {
+} params
+
+locals{
+
+i : digit.
+
+}locals
+
+body{
+
+  i = 0.
+  during i lessorequal 10{
+    shout i.
+
+    such i greaterthan 3{
+      stop.
+    }such    
+   }during
+
+    i = i sum 1.
+
+  }during.
+
+}body
