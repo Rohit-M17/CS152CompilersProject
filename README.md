@@ -62,8 +62,9 @@
 | body {                                                               | BEGIN_BODY    |
 | } body                                                               | END_BODY      |
 | digit                                                                | DIGIT         |
+| during                                                               | WHILE         | 
 | arr[]                                                                | ARRAY         |
-| such                                                                 | WHILE         | 
+| such                                                                 | IF            | 
 | next                                                                 | NEXT          |
 | stop                                                                 | STOP          |
 | same                                                                 | SAME          |
