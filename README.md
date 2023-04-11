@@ -68,6 +68,7 @@
 | next                                                                 | NEXT          |
 | stop                                                                 | STOP          |
 | stopif                                                               | ENDIF         |
+| return                                                               | RETURN        |
 | same                                                                 | SAME          |
 | <center> Identifiers and Symbols </center>                           |               | 
 | identifier (e.g., "aardvark", "BIG_PENGUIN", "fLaMInGo_17", "ot73r") | IDENT XXXX    | 
