@@ -10,14 +10,15 @@ locals {
 } locals
 
 body {
-  read n;
-  if n >=100 then
-    write n;
-  else
-    m := n-1;
-    write m;
-  endif;
+  read(n).
+  such n greaterorequal 100 {
+    shout(n).
+  }
+  next {
+    m = n sub 1.
+    shout(m).
+  }
 
-write o;
+shout(o).
 
-endbody
+} body

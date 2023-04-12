@@ -1,13 +1,12 @@
 // This is a simple loop with a break statement
 
-function main.
+funct main.
+
 params {
 } params
 
 locals {
-
-i : digit.
-
+  i : digit.
 } locals
 
 body {
@@ -21,6 +20,6 @@ body {
     stopif.
 
     i = i sum 1.
-  } during.
+  } during
 
 } body

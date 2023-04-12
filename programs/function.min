@@ -1,4 +1,5 @@
-function add.
+funct add.
+
 params {
     a : digit.
     b : digit.
@@ -9,24 +10,24 @@ locals {
 
 body {
         return a sum b.
-}body
+} body
 
 
-function mult.
+funct mult.
 params {
-    a : digit.
-    b : digit. 
+  a : digit.
+  b : digit.
 } params
 
 locals {
 } locals
 body {
-        return a mult b.
+  return a mult b.
 } body
 
 
+funct main.
 
-function main.
 params {
 } params
 
@@ -37,14 +38,12 @@ locals {
   d : digit.
 } locals
 
-body {    
-
+body {
   a = 100.
   b = 50.
   c = a sum b.
-  shout(c).        ## should print 150
-
+  shout(c).        // should print 150
 
   d = (c mult (a sum b)).
-  shout(d).        ## should print "22500", since 22500 = 150 * 150;
+  shout(d).        // should print "22500", since 22500 = 150 * 150;
 } body

@@ -1,21 +1,19 @@
 // This is a simple loop that counts from 1 to 10
 
-function main.
+funct main.
 
 params {
 } params
 
 locals {
-
-i : digit.
-
+  i : digit.
 } locals
 
 body {
     i = 0.
-      during i lessthan 10 {
-            i = i sum 1.
-            shout(i).
-      }during.
+    during i lessthan 10 {
+      i = i sum 1.
+      shout(i).
+    } during
 
 } body

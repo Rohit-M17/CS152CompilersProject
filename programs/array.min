@@ -4,7 +4,7 @@ params {
 } params
 
 locals {
-  a : digit arr[20].
+  a : digit arr[] size 20.
   b : digit.
   c : digit.
 } locals
