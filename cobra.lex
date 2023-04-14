@@ -23,11 +23,16 @@ STOP "stop"
 CONTINUE "continue"
 SUCH such
 NEXT next
+WHITESPACE [\t]+
+READ "read"
+SHOUT "shout"
+COMMENT "//"
+FUNCTION "funct"
 
 %%
-{ASSIGNMENT}+  { printf("ASSIGN\n"); currpos = currpos + yyleng;}
-{EQ}+          { printf("EQ\n"); currpos = currpos + yyleng;}
-{NEQ}+         { printf("NEQ\n"); currpos = currpos + yyleng;}
+{ASSIGNMENT}+  { printf("ASSIGN:      %s\n", yytext); currpos = currpos + yyleng;}
+{EQ}+          { printf("EQ:          %s\n", yytext); currpos = currpos + yyleng;}
+{NEQ}+         { printf("NEQ:         %s\n", yytext); currpos = currpos + yyleng;}
 {LT}+          { printf("LT:          %s\n", yytext); }
 {GT}+          { printf("GT:          %s\n", yytext); }
 {LTE}+         { printf("LTE:         %s\n", yytext); }
@@ -39,6 +44,12 @@ NEXT next
 {CONTINUE}+    { printf("CONTINUE:    %s\n", yytext); }
 {SUCH}+        { printf("SUCH:        %s\n", yytext); }
 {NEXT}+        { printf("NEXT:        %s\n", yytext); }
+{READ} +       { printf("READ:        %s\n", yytext); }
+{SHOUT}+       { printf("SHOUT:       %s\n", yytext); }
+{COMMENT}      { /* ignore comments */ }
+{FUNCTION}     { printf("FUNCTION:    %s\n", yytext); }
+{IDENT}        { printf("IDENT:       %s\n", yytext); }
+
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
 {ALPHA}+       { printf("VARIABLE:    %s\n", yytext); currpos = currpos + yyleng;}
 .
