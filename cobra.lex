@@ -1,13 +1,14 @@
 %{
 #include <stdio.h>
-
+int currline = 1;
+int currpos = 1;
 %}
-/* Definitions for regular expressions */
-DIGIT [0-9]
-ALPHA [a-z]|[A-Z]
-BACKSLASH "/"
 
 /* Definitions for token patterns */
+DIGIT [0-9]
+ALPHA [a-z]|[A-Z]
+
+ASSIGNMENT "="
 EQ "equals"
 NEQ "notequals"
 LT "lessthan"
@@ -23,10 +24,11 @@ SUCH such
 NEXT next
 
 %%
-{DIGIT}+   { printf("NUMBER: %s\n", yytext); }
-{ALPHA}+       { printf("TOKEN:       %s\n", yytext); }
-{EQ}+          { printf("EQ:          %s\n", yytext); }
-{NEQ}+         { printf("NEQ:         %s\n", yytext); }
+{DIGIT}+       { printf("NUMBER: %s\n", yytext); }
+{ALPHA}+       { printf("VARIABLE:  %s\n", yytext); currpos = currpos + yyleng;}
+{ASSIGNMENT}+  { printf("ASSIGN\n"); currpos = currpos + yyleng;}
+{EQ}+          { printf("EQ\n"); currpos = currpos + yyleng;}
+{NEQ}+         { printf("NEQ\n"); currpos = currpos + yyleng;}
 {LT}+          { printf("LT:          %s\n", yytext); }
 {GT}+          { printf("GT:          %s\n", yytext); }
 {LTE}+         { printf("LTE:         %s\n", yytext); }
