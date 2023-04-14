@@ -50,6 +50,7 @@ FUNCTION "funct"
 {COMMENT}    { /* ignore comments */ }
 {FUNCTION}   { printf("TOKEN: FUNCTION\n");  }
 {IDENT}      { printf("TOKEN: IDENT(%s)\n", yytext); }
+"."          { printf("TOKEN: PERIOD\n"); }
 .
 %%
 
