@@ -49,6 +49,7 @@ FUNCTION "funct"
 {COMMENT}      { /* ignore comments */ }
 {FUNCTION}     { printf("FUNCTION:    %s\n", yytext); }
 {IDENT}        { printf("IDENT:       %s\n", yytext); }
+"."            { printf("PERIOD:      %s\n", yytext); }
 
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
 {ALPHA}+       { printf("VARIABLE:    %s\n", yytext); currpos = currpos + yyleng;}
