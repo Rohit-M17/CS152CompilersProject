@@ -4,10 +4,11 @@ int currline = 1;
 int currpos = 1;
 %}
 
-/* Definitions for token patterns */
+/* Definitions for regular expressions */
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
 
+/* Definitions for token patterns */
 ASSIGNMENT "="
 EQ "equals"
 NEQ "notequals"
@@ -24,8 +25,6 @@ SUCH such
 NEXT next
 
 %%
-{DIGIT}+       { printf("NUMBER: %s\n", yytext); }
-{ALPHA}+       { printf("VARIABLE:  %s\n", yytext); currpos = currpos + yyleng;}
 {ASSIGNMENT}+  { printf("ASSIGN\n"); currpos = currpos + yyleng;}
 {EQ}+          { printf("EQ\n"); currpos = currpos + yyleng;}
 {NEQ}+         { printf("NEQ\n"); currpos = currpos + yyleng;}
@@ -40,6 +39,8 @@ NEXT next
 {CONTINUE}+    { printf("CONTINUE:    %s\n", yytext); }
 {SUCH}+        { printf("SUCH:        %s\n", yytext); }
 {NEXT}+        { printf("NEXT:        %s\n", yytext); }
+{DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
+{ALPHA}+       { printf("VARIABLE:    %s\n", yytext); currpos = currpos + yyleng;}
 .
 %%
 
