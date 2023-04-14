@@ -17,9 +17,9 @@ body {
 
     such i greaterthan 3 {
       stop.
-    stopif.
+    }
 
     i = i sum 1.
-  } during
+  }
 
 } body

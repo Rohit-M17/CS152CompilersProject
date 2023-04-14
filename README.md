@@ -68,7 +68,7 @@
 | such                                                                 | IF            | 
 | next                                                                 | NEXT          |
 | stop                                                                 | STOP          |
-| stopif                                                               | ENDIF         |
+| continue                                                             | CONTINUE      | 
 | return                                                               | RETURN        |
 | same                                                                 | SAME          |
 | <center> Identifiers and Symbols </center>                           |               | 
