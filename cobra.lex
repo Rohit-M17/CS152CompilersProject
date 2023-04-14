@@ -22,6 +22,11 @@ STOP "stop"
 CONTINUE "continue"
 SUCH such
 NEXT next
+WHITESPACE [\t]+
+READ "read"
+SHOUT "shout"
+COMMENT "//"
+FUNCTION "funct"
 
 %%
 {DIGIT}+       { printf("NUMBER: %s\n", yytext); }
@@ -40,6 +45,11 @@ NEXT next
 {CONTINUE}+    { printf("CONTINUE:    %s\n", yytext); }
 {SUCH}+        { printf("SUCH:        %s\n", yytext); }
 {NEXT}+        { printf("NEXT:        %s\n", yytext); }
+{READ} +     { printf("TOKEN: SHOUT\n"); }
+{SHOUT}+     { printf("TOKEN: SHOUT\n"); }
+{COMMENT}    { /* ignore comments */ }
+{FUNCTION}   { printf("TOKEN: FUNCTION\n");  }
+{IDENT}      { printf("TOKEN: IDENT(%s)\n", yytext); }
 .
 %%
 
