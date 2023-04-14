@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
-
+int currline = 1;
+int currpos = 1;
 %}
 
 DIGIT [0-9]
@@ -9,7 +10,10 @@ BACKSLASH "/"
 
 %%
 {DIGIT}+   { printf("NUMBER: %s\n", yytext); }
-{ALPHA}+   { printf("TOKEN:  %s\n", yytext); }
+{ALPHA}+   { printf("VARIABLE:  %s\n", yytext); currpos = currpos + yyleng;}
+"="           {printf("ASSIGN\n"); currpos = currpos + yyleng;}
+"equals"    {printf("EQ\n"); currpos = currpos + yyleng;}
+"notequals"    {printf("NEQ\n"); currpos = currpos + yyleng;}
 .
 %%
 
