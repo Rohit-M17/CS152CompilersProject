@@ -70,7 +70,6 @@
 | stop                                                                 | STOP          |
 | continue                                                             | CONTINUE      | 
 | return                                                               | RETURN        |
-| same                                                                 | SAME          |
 | <center> Identifiers and Symbols </center>                           |               | 
 | identifier (e.g., "aardvark", "BIG_PENGUIN", "fLaMInGo_17", "ot73r") | IDENT XXXX    | 
 | number (e.g., "17", "101", "90210", "0", "8675309")                  | NUMBER XXXX   | 
