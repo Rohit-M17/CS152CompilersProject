@@ -51,7 +51,7 @@ DOT "."
 {COMMENT}+     { /* ignore comments */ }
 {FUNCTION}+    { printf("FUNCTION:    %s\n", yytext); }
 {IDENT}+       { printf("IDENT:       %s\n", yytext); }
-{DOT}+         { printf("PERIOD:      %s\n", yytext); }
+{DOT}+         { printf("DOT:      %s\n", yytext); }
 
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
 .
