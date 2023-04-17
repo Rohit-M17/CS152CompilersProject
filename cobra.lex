@@ -9,6 +9,7 @@ DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
 IDENT [a-zA-Z_][a-zA-Z0-9_]*
 COMMENT \/\/.*\n
+WHITESPACE [\t]+
 
 /* Definitions for token patterns */
 ASSIGNMENT "="
@@ -25,7 +26,6 @@ STOP "stop"
 CONTINUE "continue"
 SUCH "such"
 NEXT "next"
-WHITESPACE [\t]+
 READ "read"
 SHOUT "shout"
 FUNCTION "funct"
