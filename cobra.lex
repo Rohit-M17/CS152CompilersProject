@@ -27,7 +27,7 @@ NEXT next
 WHITESPACE [\t]+
 READ "read"
 SHOUT "shout"
-COMMENT "//"
+COMMENT \/\/.*\n
 FUNCTION "funct"
 DOT "."
 
