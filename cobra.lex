@@ -7,6 +7,7 @@ int currpos = 1;
 /* Definitions for regular expressions */
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
+IDENT [a-zA-Z_][a-zA-Z0-9_]*
 
 /* Definitions for token patterns */
 ASSIGNMENT "="
@@ -53,7 +54,6 @@ DOT "."
 {DOT}+         { printf("PERIOD:      %s\n", yytext); }
 
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
-{ALPHA}+       { printf("VARIABLE:    %s\n", yytext); currpos = currpos + yyleng;}
 .
 %%
 
