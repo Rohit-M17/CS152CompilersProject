@@ -33,9 +33,9 @@ FUNCTION "funct"
 DOT "."
 
 %%
-{ASSIGNMENT}+  { printf("ASSIGN:      %s\n", yytext); currpos = currpos + yyleng;}
-{EQ}+          { printf("EQ:          %s\n", yytext); currpos = currpos + yyleng;}
-{NEQ}+         { printf("NEQ:         %s\n", yytext); currpos = currpos + yyleng;}
+{ASSIGNMENT}+  { printf("ASSIGN:      %s\n", yytext); currpos = currpos + yyleng; }
+{EQ}+          { printf("EQ:          %s\n", yytext); currpos = currpos + yyleng; }
+{NEQ}+         { printf("NEQ:         %s\n", yytext); currpos = currpos + yyleng; }
 {LT}+          { printf("LT:          %s\n", yytext); }
 {GT}+          { printf("GT:          %s\n", yytext); }
 {LTE}+         { printf("LTE:         %s\n", yytext); }
@@ -52,8 +52,8 @@ DOT "."
 {COMMENT}+     { /* ignore comments */ }
 {FUNCTION}+    { printf("FUNCTION:    %s\n", yytext); }
 {IDENT}+       { printf("IDENT:       %s\n", yytext); }
-{INVALIDIDENT}+ { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng;}
 {DOT}+         { printf("DOT:      %s\n", yytext); }
+{INVALIDIDENT}+ { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
 
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
 
