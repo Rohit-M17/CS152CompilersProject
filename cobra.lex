@@ -59,7 +59,5 @@ DOT "."
 
 int main(void) {
   printf("Ctrl + D to quit\n");
-  printf("Hello, My Name is %s\n", "Daniel");
-  printf("%d + %d = %d", 1, 1, 2);
   yylex();
 }
