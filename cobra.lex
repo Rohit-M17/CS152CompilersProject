@@ -49,9 +49,9 @@ DOT "."
 {SHOUT}+       { printf("SHOUT:       %s\n", yytext); }
 {COMMENT}+     { /* ignore comments */ }
 {FUNCTION}+    { printf("FUNCTION:    %s\n", yytext); }
-{IDENT}+       { printf("IDENT:       %s\n", yytext); }
-{DOT}+         { printf("PERIOD:      %s\n", yytext); }
-
+{ALPHA}({ALPHA}|{DIGIT})* { printf("IDENT(%s)\n", yytext); }
+{DOT}+         { printf("PERIOD\n", yytext); }
+{WHITESPACE}   { /* ignore whitespace */ }
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
 {ALPHA}+       { printf("VARIABLE:    %s\n", yytext); currpos = currpos + yyleng;}
 .
@@ -59,7 +59,5 @@ DOT "."
 
 int main(void) {
   printf("Ctrl + D to quit\n");
-  printf("Hello, My Name is %s\n", "Daniel");
-  printf("%d + %d = %d", 1, 1, 2);
   yylex();
 }
