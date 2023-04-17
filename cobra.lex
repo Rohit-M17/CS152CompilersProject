@@ -28,6 +28,7 @@ READ "read"
 SHOUT "shout"
 COMMENT "//"
 FUNCTION "funct"
+DOT "."
 
 %%
 {ASSIGNMENT}+  { printf("ASSIGN:      %s\n", yytext); currpos = currpos + yyleng;}
@@ -44,12 +45,12 @@ FUNCTION "funct"
 {CONTINUE}+    { printf("CONTINUE:    %s\n", yytext); }
 {SUCH}+        { printf("SUCH:        %s\n", yytext); }
 {NEXT}+        { printf("NEXT:        %s\n", yytext); }
-{READ} +       { printf("READ:        %s\n", yytext); }
+{READ}+        { printf("READ:        %s\n", yytext); }
 {SHOUT}+       { printf("SHOUT:       %s\n", yytext); }
-{COMMENT}      { /* ignore comments */ }
-{FUNCTION}     { printf("FUNCTION:    %s\n", yytext); }
-{IDENT}        { printf("IDENT:       %s\n", yytext); }
-"."            { printf("PERIOD:      %s\n", yytext); }
+{COMMENT}+     { /* ignore comments */ }
+{FUNCTION}+    { printf("FUNCTION:    %s\n", yytext); }
+{IDENT}+       { printf("IDENT:       %s\n", yytext); }
+{DOT}+         { printf("PERIOD:      %s\n", yytext); }
 
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
 {ALPHA}+       { printf("VARIABLE:    %s\n", yytext); currpos = currpos + yyleng;}
