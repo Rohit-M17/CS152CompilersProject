@@ -33,29 +33,28 @@ FUNCTION "funct"
 DOT "."
 
 %%
-{ASSIGNMENT}+  { printf("ASSIGN:      %s\n", yytext); currpos = currpos + yyleng; }
-{EQ}+          { printf("EQ:          %s\n", yytext); currpos = currpos + yyleng; }
-{NEQ}+         { printf("NEQ:         %s\n", yytext); currpos = currpos + yyleng; }
-{LT}+          { printf("LT:          %s\n", yytext); }
-{GT}+          { printf("GT:          %s\n", yytext); }
-{LTE}+         { printf("LTE:         %s\n", yytext); }
-{GTE}+         { printf("GTE:         %s\n", yytext); }
-{LEFT_BRACE}+  { printf("LEFT_BRACE:  %s\n", yytext); }
-{RIGHT_BRACE}+ { printf("RIGHT_BRACE: %s\n", yytext); }
-{WHILE}+       { printf("WHILE:       %s\n", yytext); }
-{STOP}+        { printf("STOP:        %s\n", yytext); }
-{CONTINUE}+    { printf("CONTINUE:    %s\n", yytext); }
-{SUCH}+        { printf("SUCH:        %s\n", yytext); }
-{NEXT}+        { printf("NEXT:        %s\n", yytext); }
-{READ}+        { printf("READ:        %s\n", yytext); }
-{SHOUT}+       { printf("SHOUT:       %s\n", yytext); }
-{COMMENT}+     { /* ignore comments */ }
-{FUNCTION}+    { printf("FUNCTION:    %s\n", yytext); }
-{IDENT}+       { printf("IDENT:       %s\n", yytext); }
-{DOT}+         { printf("DOT:      %s\n", yytext); }
-{INVALIDIDENT}+ { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
-
-{DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
+{ASSIGNMENT}+     { printf("ASSIGN:      %s\n", yytext); currpos = currpos + yyleng; }
+{EQ}+             { printf("EQ:          %s\n", yytext); currpos = currpos + yyleng; }
+{NEQ}+            { printf("NEQ:         %s\n", yytext); currpos = currpos + yyleng; }
+{LT}+             { printf("LT:          %s\n", yytext); currpos = currpos + yyleng; }
+{GT}+             { printf("GT:          %s\n", yytext); currpos = currpos + yyleng; }
+{LTE}+            { printf("LTE:         %s\n", yytext); currpos = currpos + yyleng; }
+{GTE}+            { printf("GTE:         %s\n", yytext); currpos = currpos + yyleng; }
+{LEFT_BRACE}+     { printf("LEFT_BRACE:  %s\n", yytext); currpos = currpos + yyleng; }
+{RIGHT_BRACE}+    { printf("RIGHT_BRACE: %s\n", yytext); currpos = currpos + yyleng; }
+{WHILE}+          { printf("WHILE:       %s\n", yytext); currpos = currpos + yyleng; }
+{STOP}+           { printf("STOP:        %s\n", yytext); currpos = currpos + yyleng; }
+{CONTINUE}+       { printf("CONTINUE:    %s\n", yytext); currpos = currpos + yyleng; }
+{SUCH}+           { printf("SUCH:        %s\n", yytext); currpos = currpos + yyleng; }
+{NEXT}+           { printf("NEXT:        %s\n", yytext); currpos = currpos + yyleng; }
+{READ}+           { printf("READ:        %s\n", yytext); currpos = currpos + yyleng; }
+{SHOUT}+          { printf("SHOUT:       %s\n", yytext); currpos = currpos + yyleng; }
+{COMMENT}+        { /* ignore comments */ }
+{FUNCTION}+       { printf("FUNCTION:    %s\n", yytext); currpos = currpos + yyleng; }
+{IDENT}+          { printf("IDENT:       %s\n", yytext); currpos = currpos + yyleng; }
+{DOT}+            { printf("DOT:         %s\n", yytext); currpos = currpos + yyleng; }
+{INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
+{DIGIT}+          { printf("NUMBER:      %s\n", yytext); }
 
 .
 %%
