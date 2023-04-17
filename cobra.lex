@@ -8,6 +8,7 @@ int currpos = 1;
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
 IDENT [a-zA-Z_][a-zA-Z0-9_]*
+INVALIDIDENT [^A-Za-z_]|[0-9][A-Za-z_]*
 COMMENT \/\/.*\n
 WHITESPACE [\t]+
 
@@ -51,9 +52,11 @@ DOT "."
 {COMMENT}+     { /* ignore comments */ }
 {FUNCTION}+    { printf("FUNCTION:    %s\n", yytext); }
 {IDENT}+       { printf("IDENT:       %s\n", yytext); }
+{INVALIDIDENT}+ { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng;}
 {DOT}+         { printf("DOT:      %s\n", yytext); }
 
 {DIGIT}+       { printf("NUMBER:      %s\n", yytext); }
+
 .
 %%
 
