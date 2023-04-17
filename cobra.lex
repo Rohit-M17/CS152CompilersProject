@@ -53,8 +53,8 @@ DOT "."
 {FUNCTION}+       { printf("FUNCTION:    %s\n", yytext); currpos = currpos + yyleng; }
 {IDENT}+          { printf("IDENT:       %s\n", yytext); currpos = currpos + yyleng; }
 {DOT}+            { printf("DOT:         %s\n", yytext); currpos = currpos + yyleng; }
-{INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
 {DIGIT}+          { printf("NUMBER:      %s\n", yytext); }
+{INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
 
 .
 %%
