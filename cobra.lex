@@ -8,6 +8,7 @@ int currpos = 1;
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
 IDENT [a-zA-Z_][a-zA-Z0-9_]*
+COMMENT \/\/.*\n
 
 /* Definitions for token patterns */
 ASSIGNMENT "="
@@ -22,12 +23,11 @@ RIGHT_BRACE "}"
 WHILE "during"
 STOP "stop"
 CONTINUE "continue"
-SUCH such
-NEXT next
+SUCH "such"
+NEXT "next"
 WHITESPACE [\t]+
 READ "read"
 SHOUT "shout"
-COMMENT \/\/.*\n
 FUNCTION "funct"
 DOT "."
 
