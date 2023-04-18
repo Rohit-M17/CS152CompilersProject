@@ -4,6 +4,8 @@ int currline = 1;
 int currpos = 1;
 %}
 
+extern FILE* yyin;
+
 /* Definitions for regular expressions */
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
@@ -59,7 +61,25 @@ DOT "."
 .
 %%
 
-int main(void) {
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    printf("Not correct usage of the command.", argv[0]);
+    return 1;
+  }
+  
+  FILE *inputFile = fopen(argv[1], "r");
+  if (inputFile == NULL) {
+    printf("Unable to open input file: %s\n", argv[1]);
+    return 1;
+  }
+
+  yyin = inputFile;
+
   printf("Ctrl + D to quit\n");
   yylex();
+
+  fclose(inputFile);
+
+  return 0;
 }
+
