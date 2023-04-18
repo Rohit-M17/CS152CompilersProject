@@ -4,7 +4,6 @@ int currline = 1;
 int currpos = 1;
 %}
 
-extern FILE* yyin;
 
 /* Definitions for regular expressions */
 DIGIT [0-9]
@@ -15,15 +14,34 @@ COMMENT \/\/.*\n
 WHITESPACE [\t]+
 
 /* Definitions for token patterns */
+/* Arithmetic Operators */
 ASSIGNMENT "="
+ADD "sum"
+SUB "sub"
+MULT "mult"
+DIV "div"
+MOD "mod"
+
+/* Comparison Operators */
 EQ "equals"
 NEQ "notequals"
 LT "lessthan"
 GT "greaterthan"
 LTE "lessorequal"
 GTE "greaterorequal"
+
+/* Other Symbols */
 LEFT_BRACE "{"
 RIGHT_BRACE "}"
+COLON ":"
+LEFT_PARAN "("
+RIGHT_PARAN ")"
+LEFT_BRACKET "["
+RIGHT_BRACKET "]"
+COMMA ","
+UNDERSCORE "_"
+
+/* Reserved Words */
 WHILE "during"
 STOP "stop"
 CONTINUE "continue"
@@ -33,17 +51,41 @@ READ "read"
 SHOUT "shout"
 FUNCTION "funct"
 DOT "."
+BEGIN_PARAMS "params {"
+END_PARAMS "} params"
+BEGIN_LOCALS "locals {"
+END_LOCALS "} locals"
+BEGIN_BODY "body {"
+END_BODY "} body"
+ARRAY "arr[]"
+RETURN "return"
 
 %%
-{ASSIGNMENT}+     { printf("ASSIGN:      %s\n", yytext); currpos = currpos + yyleng; }
+
+{ASSIGNMENT}+     { printf("ASSIGNMENT:  %s\n", yytext); currpos = currpos + yyleng; }
+{ADD}+            { printf("ADD:         %s\n", yytext); currpos = currpos + yyleng; }
+{SUB}+            { printf("SUB:         %s\n", yytext); currpos = currpos + yyleng; }
+{MULT}+           { printf("MULT:        %s\n", yytext); currpos = currpos + yyleng; }
+{DIV}+            { printf("DIV:         %s\n", yytext); currpos = currpos + yyleng; }
+{MOD}+            { printf("MOD:         %s\n", yytext); currpos = currpos + yyleng; }
+
 {EQ}+             { printf("EQ:          %s\n", yytext); currpos = currpos + yyleng; }
 {NEQ}+            { printf("NEQ:         %s\n", yytext); currpos = currpos + yyleng; }
 {LT}+             { printf("LT:          %s\n", yytext); currpos = currpos + yyleng; }
 {GT}+             { printf("GT:          %s\n", yytext); currpos = currpos + yyleng; }
 {LTE}+            { printf("LTE:         %s\n", yytext); currpos = currpos + yyleng; }
 {GTE}+            { printf("GTE:         %s\n", yytext); currpos = currpos + yyleng; }
+
 {LEFT_BRACE}+     { printf("LEFT_BRACE:  %s\n", yytext); currpos = currpos + yyleng; }
 {RIGHT_BRACE}+    { printf("RIGHT_BRACE: %s\n", yytext); currpos = currpos + yyleng; }
+{COLON}+          { printf("COLON:       %s\n", yytext); currpos = currpos + yyleng; }
+{LEFT_PARAN}+     { printf("LEFT_PARAN:  %s\n", yytext); currpos = currpos + yyleng; }
+{RIGHT_PARAN}+    { printf("RIGHT_PARAN: %s\n", yytext); currpos = currpos + yyleng; }
+{LEFT_BRACKET}+   { printf("LEFT_BRACKET: %s\n", yytext); currpos = currpos + yyleng; }
+{RIGHT_BRACKET}+  { printf("RIGHT_BRACKET: %s\n", yytext); currpos = currpos + yyleng; }
+{COMMA}+          { printf("COMMA       %s\n", yytext); currpos = currpos + yyleng; }        
+{UNDERSCORE}+     { printf("UNDERSCORE: %s\n", yytext); currpos = currpos + yyleng; }
+
 {WHILE}+          { printf("WHILE:       %s\n", yytext); currpos = currpos + yyleng; }
 {STOP}+           { printf("STOP:        %s\n", yytext); currpos = currpos + yyleng; }
 {CONTINUE}+       { printf("CONTINUE:    %s\n", yytext); currpos = currpos + yyleng; }
@@ -55,31 +97,13 @@ DOT "."
 {FUNCTION}+       { printf("FUNCTION:    %s\n", yytext); currpos = currpos + yyleng; }
 {IDENT}+          { printf("IDENT:       %s\n", yytext); currpos = currpos + yyleng; }
 {DOT}+            { printf("DOT:         %s\n", yytext); currpos = currpos + yyleng; }
-{DIGIT}+          { printf("NUMBER:      %s\n", yytext); }
 {INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
-
+{DIGIT}+          { printf("NUMBER:      %s\n", yytext); }
 .
 %%
 
-int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    printf("Not correct usage of the command.", argv[0]);
-    return 1;
-  }
-  
-  FILE *inputFile = fopen(argv[1], "r");
-  if (inputFile == NULL) {
-    printf("Unable to open input file: %s\n", argv[1]);
-    return 1;
-  }
-
-  yyin = inputFile;
-
+int main(void) {
   printf("Ctrl + D to quit\n");
   yylex();
-
-  fclose(inputFile);
-
-  return 0;
 }
 
