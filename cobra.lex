@@ -7,11 +7,12 @@ int currpos = 1;
 extern FILE* yyin;
 
 /* Definitions for regular expressions */
+INVALIDIDENT ^[0-9][A-Za-z_]\s
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
 IDENT [a-zA-Z_][a-zA-Z0-9_]*
-/* INVALIDIDENT [^A-Za-z_]|[0-9][A-Za-z_]*
-{INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; } */
+/* INVALIDIDENT ^[0-9][A-Za-z_]\s */
+/* {INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; } */
 COMMENT \/\/.*\n
 WHITESPACE [\t]+
 
@@ -107,6 +108,7 @@ RETURN "return"
 {ARRAY}+          { printf("ARRAY:         %s\n", yytext); currpos = currpos + yyleng; }
 {RETURN}+         { printf("RETURN:        %s\n", yytext); currpos = currpos + yyleng; }
 
+{INVALIDIDENT}+   { printf("*********ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
 {IDENT}+          { printf("IDENT:         %s\n", yytext); currpos = currpos + yyleng; }
 {DIGIT}+          { printf("NUMBER:        %s\n", yytext); currpos = currpos + yyleng; }
 .
