@@ -10,7 +10,8 @@ extern FILE* yyin;
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
 IDENT [a-zA-Z_][a-zA-Z0-9_]*
-INVALIDIDENT [^A-Za-z_]|[0-9][A-Za-z_]*
+/* INVALIDIDENT [^A-Za-z_]|[0-9][A-Za-z_]*
+{INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; } */
 COMMENT \/\/.*\n
 WHITESPACE [\t]+
 
@@ -58,7 +59,7 @@ BEGIN_LOCALS "locals {"
 END_LOCALS "} locals"
 BEGIN_BODY "body {"
 END_BODY "} body"
-ARRAY "arr[]"
+ARRAY "arr"
 RETURN "return"
 
 %%
@@ -96,10 +97,18 @@ RETURN "return"
 {SHOUT}+          { printf("SHOUT:         %s\n", yytext); currpos = currpos + yyleng; }
 {COMMENT}+        { /* ignore comments */                  currpos = currpos + yyleng; }
 {FUNCTION}+       { printf("FUNCTION:      %s\n", yytext); currpos = currpos + yyleng; }
-{IDENT}+          { printf("IDENT:         %s\n", yytext); currpos = currpos + yyleng; }
 {DOT}+            { printf("DOT:           %s\n", yytext); currpos = currpos + yyleng; }
-{INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
-{DIGIT}+          { printf("NUMBER:        %s\n", yytext); }
+{BEGIN_PARAMS}+   { printf("BEGIN_PARAMS:  %s\n", yytext); currpos = currpos + yyleng; }
+{END_PARAMS}+     { printf("END_PARAMS:    %s\n", yytext); currpos = currpos + yyleng; }
+{BEGIN_LOCALS}+   { printf("BEGIN_LOCALS:  %s\n", yytext); currpos = currpos + yyleng; }
+{END_LOCALS}+     { printf("END_LOCALS:    %s\n", yytext); currpos = currpos + yyleng; }
+{BEGIN_BODY}+     { printf("BEGIN_BODY:    %s\n", yytext); currpos = currpos + yyleng; }
+{END_BODY}+       { printf("END_BODY:      %s\n", yytext); currpos = currpos + yyleng; }
+{ARRAY}+          { printf("ARRAY:         %s\n", yytext); currpos = currpos + yyleng; }
+{RETURN}+         { printf("RETURN:        %s\n", yytext); currpos = currpos + yyleng; }
+
+{IDENT}+          { printf("IDENT:         %s\n", yytext); currpos = currpos + yyleng; }
+{DIGIT}+          { printf("NUMBER:        %s\n", yytext); currpos = currpos + yyleng; }
 .
 %%
 
