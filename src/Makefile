@@ -1,4 +1,4 @@
 all:
-    flex lexer.lex
+    flex cobra.lex
     gcc lex.yy.c -lfl
     ./a.out array.min

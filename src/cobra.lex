@@ -97,7 +97,7 @@ RETURN "return"
 {SHOUT}+          { printf("SHOUT:         %s\n", yytext); currpos = currpos + yyleng; }
 {COMMENT}+        { /* ignore comments */                  currpos = currpos + yyleng; }
 {WHITESPACE}+     { /* ignore whitespace */                currpos = currpos + yyleng; }
-{NEWLINE}+        { /* ignore newline */   currpos = 0;   currline = currline + 1;     }
+{NEWLINE}+        { /* ignore newline */   currpos = 0;    currline = currline + 1;    }
 {FUNCTION}+       { printf("FUNCTION:      %s\n", yytext); currpos = currpos + yyleng; }
 {DOT}+            { printf("DOT:           %s\n", yytext); currpos = currpos + yyleng; }
 {BEGIN_PARAMS}+   { printf("BEGIN_PARAMS:  %s\n", yytext); currpos = currpos + yyleng; }
