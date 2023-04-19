@@ -64,50 +64,50 @@ RETURN "return"
 
 %%
 
-{ASSIGNMENT}+     { printf("ASSIGNMENT", yytext); currpos = currpos + yyleng; }
-{ADD}+            { printf("ADD", yytext); currpos = currpos + yyleng; }
-{SUB}+            { printf("SUB", yytext); currpos = currpos + yyleng; }
-{MULT}+           { printf("MULT", yytext); currpos = currpos + yyleng; }
-{DIV}+            { printf("DIV", yytext); currpos = currpos + yyleng; }
-{MOD}+            { printf("MOD", yytext); currpos = currpos + yyleng; }
+{ASSIGNMENT}+     { printf("ASSIGNMENT\n", yytext); currpos = currpos + yyleng; }
+{ADD}+            { printf("ADD\n", yytext); currpos = currpos + yyleng; }
+{SUB}+            { printf("SUB\n", yytext); currpos = currpos + yyleng; }
+{MULT}+           { printf("MULT\n", yytext); currpos = currpos + yyleng; }
+{DIV}+            { printf("DIV\n", yytext); currpos = currpos + yyleng; }
+{MOD}+            { printf("MOD\n", yytext); currpos = currpos + yyleng; }
 
-{EQ}+             { printf("EQ", yytext); currpos = currpos + yyleng; }
-{NEQ}+            { printf("NEQ", yytext); currpos = currpos + yyleng; }
-{LT}+             { printf("LT", yytext); currpos = currpos + yyleng; }
-{GT}+             { printf("GT", yytext); currpos = currpos + yyleng; }
-{LTE}+            { printf("LTE", yytext); currpos = currpos + yyleng; }
-{GTE}+            { printf("GTE", yytext); currpos = currpos + yyleng; }
+{EQ}+             { printf("EQ\n", yytext); currpos = currpos + yyleng; }
+{NEQ}+            { printf("NEQ\n", yytext); currpos = currpos + yyleng; }
+{LT}+             { printf("LT\n", yytext); currpos = currpos + yyleng; }
+{GT}+             { printf("GT\n", yytext); currpos = currpos + yyleng; }
+{LTE}+            { printf("LTE\n", yytext); currpos = currpos + yyleng; }
+{GTE}+            { printf("GTE\n", yytext); currpos = currpos + yyleng; }
 
-{LEFT_BRACE}+     { printf("LEFT_BRACE", yytext); currpos = currpos + yyleng; }
-{RIGHT_BRACE}+    { printf("RIGHT_BRACE", yytext); currpos = currpos + yyleng; }
-{COLON}+          { printf("COLON", yytext); currpos = currpos + yyleng; }
-{LEFT_PARAN}+     { printf("LEFT_PARAN", yytext); currpos = currpos + yyleng; }
-{RIGHT_PARAN}+    { printf("RIGHT_PARAN", yytext); currpos = currpos + yyleng; }
-{LEFT_BRACKET}+   { printf("LEFT_BRACKET", yytext); currpos = currpos + yyleng; }
-{RIGHT_BRACKET}+  { printf("RIGHT_BRACKET", yytext); currpos = currpos + yyleng; }
-{COMMA}+          { printf("COMMA", yytext); currpos = currpos + yyleng; }        
-{UNDERSCORE}+     { printf("UNDERSCORE", yytext); currpos = currpos + yyleng; }
+{LEFT_BRACE}+     { printf("LEFT_BRACE\n", yytext); currpos = currpos + yyleng; }
+{RIGHT_BRACE}+    { printf("RIGHT_BRACE\n", yytext); currpos = currpos + yyleng; }
+{COLON}+          { printf("COLON\n", yytext); currpos = currpos + yyleng; }
+{LEFT_PARAN}+     { printf("LEFT_PARAN\n", yytext); currpos = currpos + yyleng; }
+{RIGHT_PARAN}+    { printf("RIGHT_PARAN\n", yytext); currpos = currpos + yyleng; }
+{LEFT_BRACKET}+   { printf("LEFT_BRACKET\n", yytext); currpos = currpos + yyleng; }
+{RIGHT_BRACKET}+  { printf("RIGHT_BRACKET\n", yytext); currpos = currpos + yyleng; }
+{COMMA}+          { printf("COMMA\n", yytext); currpos = currpos + yyleng; }        
+{UNDERSCORE}+     { printf("UNDERSCORE\n", yytext); currpos = currpos + yyleng; }
 
-{WHILE}+          { printf("WHILE", yytext); currpos = currpos + yyleng; }
-{STOP}+           { printf("STOP", yytext); currpos = currpos + yyleng; }
-{CONTINUE}+       { printf("CONTINUE", yytext); currpos = currpos + yyleng; }
-{SUCH}+           { printf("SUCH", yytext); currpos = currpos + yyleng; }
-{NEXT}+           { printf("NEXT", yytext); currpos = currpos + yyleng; }
-{READ}+           { printf("READ", yytext); currpos = currpos + yyleng; }
-{SHOUT}+          { printf("SHOUT", yytext); currpos = currpos + yyleng; }
+{WHILE}+          { printf("WHILE\n", yytext); currpos = currpos + yyleng; }
+{STOP}+           { printf("STOP\n", yytext); currpos = currpos + yyleng; }
+{CONTINUE}+       { printf("CONTINUE\n", yytext); currpos = currpos + yyleng; }
+{SUCH}+           { printf("SUCH\n", yytext); currpos = currpos + yyleng; }
+{NEXT}+           { printf("NEXT\n", yytext); currpos = currpos + yyleng; }
+{READ}+           { printf("READ\n", yytext); currpos = currpos + yyleng; }
+{SHOUT}+          { printf("SHOUT\n", yytext); currpos = currpos + yyleng; }
 {COMMENT}+        { /* ignore comments */                  currpos = currpos + yyleng; }
 {WHITESPACE}+     { /* ignore whitespace */                currpos = currpos + yyleng; }
 {NEWLINE}+        { /* ignore newline */   currpos = 0;    currline = currline + 1;    }
-{FUNCTION}+       { printf("FUNCTION", yytext); currpos = currpos + yyleng; }
-{DOT}+            { printf("DOT", yytext); currpos = currpos + yyleng; }
-{BEGIN_PARAMS}+   { printf("BEGIN_PARAMS", yytext); currpos = currpos + yyleng; }
-{END_PARAMS}+     { printf("END_PARAMS", yytext); currpos = currpos + yyleng; }
-{BEGIN_LOCALS}+   { printf("BEGIN_LOCALS", yytext); currpos = currpos + yyleng; }
-{END_LOCALS}+     { printf("END_LOCALS", yytext); currpos = currpos + yyleng; }
-{BEGIN_BODY}+     { printf("BEGIN_BODY", yytext); currpos = currpos + yyleng; }
-{END_BODY}+       { printf("END_BODY", yytext); currpos = currpos + yyleng; }
-{ARRAY}+          { printf("ARRAY", yytext); currpos = currpos + yyleng; }
-{RETURN}+         { printf("RETURN", yytext); currpos = currpos + yyleng; }
+{FUNCTION}+       { printf("FUNCTION\n", yytext); currpos = currpos + yyleng; }
+{DOT}+            { printf("DOT\n", yytext); currpos = currpos + yyleng; }
+{BEGIN_PARAMS}+   { printf("BEGIN_PARAMS\n", yytext); currpos = currpos + yyleng; }
+{END_PARAMS}+     { printf("END_PARAMS\n", yytext); currpos = currpos + yyleng; }
+{BEGIN_LOCALS}+   { printf("BEGIN_LOCALS\n", yytext); currpos = currpos + yyleng; }
+{END_LOCALS}+     { printf("END_LOCALS\n", yytext); currpos = currpos + yyleng; }
+{BEGIN_BODY}+     { printf("BEGIN_BODY\n", yytext); currpos = currpos + yyleng; }
+{END_BODY}+       { printf("END_BODY\n", yytext); currpos = currpos + yyleng; }
+{ARRAY}+          { printf("ARRAY\n", yytext); currpos = currpos + yyleng; }
+{RETURN}+         { printf("RETURN\n", yytext); currpos = currpos + yyleng; }
 
 {INVALIDIDENT}+   { printf("*********ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
 {IDENT}+          { printf("IDENT:         %s\n", yytext); currpos = currpos + yyleng; }
