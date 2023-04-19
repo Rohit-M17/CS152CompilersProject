@@ -7,14 +7,13 @@ int currpos = 1;
 extern FILE* yyin;
 
 /* Definitions for regular expressions */
-INVALIDIDENT ^[0-9][A-Za-z_]\s
 DIGIT [0-9]
 ALPHA [a-z]|[A-Z]
 IDENT [a-zA-Z_][a-zA-Z0-9_]*
-/* INVALIDIDENT ^[0-9][A-Za-z_]\s */
-/* {INVALIDIDENT}+   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; } */
 COMMENT \/\/.*\n
-WHITESPACE [\t]+
+WHITESPACE [[:blank:]]+
+NEWLINE \n
+INVALIDIDENT [0-9]+[A-Za-z_]+
 
 /* Definitions for token patterns */
 /* Arithmetic Operators */
@@ -97,6 +96,8 @@ RETURN "return"
 {READ}+           { printf("READ:          %s\n", yytext); currpos = currpos + yyleng; }
 {SHOUT}+          { printf("SHOUT:         %s\n", yytext); currpos = currpos + yyleng; }
 {COMMENT}+        { /* ignore comments */                  currpos = currpos + yyleng; }
+{WHITESPACE}+     { /* ignore whitespace */                currpos = currpos + yyleng; }
+{NEWLINE}+        { /* ignore newline */                   currpos = currpos + yyleng; }
 {FUNCTION}+       { printf("FUNCTION:      %s\n", yytext); currpos = currpos + yyleng; }
 {DOT}+            { printf("DOT:           %s\n", yytext); currpos = currpos + yyleng; }
 {BEGIN_PARAMS}+   { printf("BEGIN_PARAMS:  %s\n", yytext); currpos = currpos + yyleng; }
@@ -111,7 +112,7 @@ RETURN "return"
 {INVALIDIDENT}+   { printf("*********ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
 {IDENT}+          { printf("IDENT:         %s\n", yytext); currpos = currpos + yyleng; }
 {DIGIT}+          { printf("NUMBER:        %s\n", yytext); currpos = currpos + yyleng; }
-.
+.                 { printf("*********ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
 %%
 
 int main(int argc, char *argv[]) {
