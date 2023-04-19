@@ -97,7 +97,7 @@ RETURN "return"
 {SHOUT}+          { printf("SHOUT:         %s\n", yytext); currpos = currpos + yyleng; }
 {COMMENT}+        { /* ignore comments */                  currpos = currpos + yyleng; }
 {WHITESPACE}+     { /* ignore whitespace */                currpos = currpos + yyleng; }
-{NEWLINE}+        { /* ignore newline */                   currpos = currpos + yyleng; }
+{NEWLINE}+        { /* ignore newline */   currpos = 0;   currline = currline + 1;     }
 {FUNCTION}+       { printf("FUNCTION:      %s\n", yytext); currpos = currpos + yyleng; }
 {DOT}+            { printf("DOT:           %s\n", yytext); currpos = currpos + yyleng; }
 {BEGIN_PARAMS}+   { printf("BEGIN_PARAMS:  %s\n", yytext); currpos = currpos + yyleng; }
@@ -109,10 +109,10 @@ RETURN "return"
 {ARRAY}+          { printf("ARRAY:         %s\n", yytext); currpos = currpos + yyleng; }
 {RETURN}+         { printf("RETURN:        %s\n", yytext); currpos = currpos + yyleng; }
 
-{INVALIDIDENT}+   { printf("*********ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
+{INVALIDIDENT}+   { printf("*********ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
 {IDENT}+          { printf("IDENT:         %s\n", yytext); currpos = currpos + yyleng; }
 {DIGIT}+          { printf("NUMBER:        %s\n", yytext); currpos = currpos + yyleng; }
-.                 { printf("*********ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, currline + 1, currpos + 1); currpos + currpos + yyleng; }
+.                 { printf("*********ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
 %%
 
 int main(int argc, char *argv[]) {
