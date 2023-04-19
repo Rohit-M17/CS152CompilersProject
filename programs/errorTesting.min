@@ -1,0 +1,28 @@
+funct main.
+
+params {
+} params
+
+locals {
+  a3:digit arr[] size 20.
+  4b : digit.
+  c! : digit.
+  errd 44b.
+} locals
+
+body {  // main program
+
+  b_b = 3.
+  _c = 5.
+  a[0] = b sum c.
+  shout(a[0]).    // should print out 8
+
+  a[1] = 100.
+  shout(a[1]).    // should print out 100
+
+  a[2] = 200.
+  shout(a[2]).    // should print out 200
+
+  a[3] = a[0] mult (a[1] sum c).
+  shout(a[3]).    // should print out 840; since 840 = 8 * (100+5)
+} body
