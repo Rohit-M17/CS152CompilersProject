@@ -15,6 +15,7 @@ body {  // main program
   b_b = 3.
   _c = 5.
   a[0] = b sum c.
+  a[10= = b sumsum c.
   shout(a[0]).    // should print out 8
 
   a[1] = 100.
