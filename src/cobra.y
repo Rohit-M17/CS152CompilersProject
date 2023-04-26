@@ -24,16 +24,27 @@ void yyerror(const char* s);
 %start function
 
 %token	<digit_val>	DIGIT
-%type	<digit_val>	exp
-%left	PLUS
-%left	MULT
+%type   <ident_val> declarations
+%type   <ident_val> statements
+%left	FUNCTION
+%left	IDENT
+%left	DOT
+%left   BEGIN_PARAMS END_PARAMS
+%left   BEGIN_LOCALS END_LOCALS
+%left   BEGIN_BODY END_BODY
 
 
 %%
 
-function:   %empty
-            | FUNCTION IDENT DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION...") }
-            ;
+function:       %empty
+                | FUNCTION IDENT DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION...") }
+                ;
+
+declarations:   %empty
+                ;
+
+statements:     %empty
+                ;
 
 %%
 /*

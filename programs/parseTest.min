@@ -1,0 +1,10 @@
+funct main.
+
+params {
+} params
+
+locals {
+} locals
+
+body {	// main program
+} body
