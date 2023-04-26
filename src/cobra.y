@@ -21,7 +21,7 @@ void yyerror(const char* s);
   string*	ident_val;
 }
 
-%define yylval YYSTYPE
+/*%define yylval YYSTYPE*/
 
 %start function
 
