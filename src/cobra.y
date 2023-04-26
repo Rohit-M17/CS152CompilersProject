@@ -21,6 +21,8 @@ void yyerror(const char* s);
   string*	ident_val;
 }
 
+%define yylval YYSTYPE
+
 %start function
 
 %token	<digit_val>	DIGIT
@@ -37,7 +39,7 @@ void yyerror(const char* s);
 %%
 
 function:       %empty
-                | FUNCTION IDENT DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION...") }
+                | FUNCTION IDENT DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION..."); }
                 ;
 
 declarations:   %empty
@@ -82,7 +84,7 @@ int main(int argc, char *argv[]) {
 }
 
 void yyerror(const char* s) {
-  printf(stderr, "ERROR: Parse error %s.\n", s);
+  fprintf(stderr, "ERROR: Parse error %s.\n", s);
   exit(1);
 }
 
