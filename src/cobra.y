@@ -5,12 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int yyerror(char *s);
-int yylex(void);
+/*int yyerror(char *s);*/
+int yylex();
+int yyparse();
+extern FILE* yyin;
 
-/* extern int yylex(); */
-extern int yyparse();
-/* extern FILE* yyin; */
+/*extern int yylex();*/
+/*extern int yyparse();*/
+/*extern FILE* yyin;*/
 
 void yyerror(const char* s);
 %}
@@ -39,8 +41,8 @@ exp:		INTEGER_LITERAL	{ $$ = $1; }
 		    | exp MULT exp	{ $$ = $1 * $3; }
 		    ;
 
-function:   /* empty */
-            | FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY
+function:   %empty
+            | FUNCTION IDENT DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION...") }
             ;
 
 %%
@@ -62,20 +64,30 @@ void yyerror(const char* s) {
 }
 */
 
-int main(int argc, char **argv)
-{
-  if ((argc > 1) && (freopen(argv[1], "r", stdin) == NULL))
-  {
-    cerr << argv[0] << ": File " << argv[1] << " cannot be opened.\n";
-    exit( 1 );
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+      printf("Not correct usage of the command.", argv[0]);
+      exit(1);
   }
-
+  FILE *inputFile = fopen(argv[1], "r");
+  if (inputFile == NULL) {
+    printf("Unable to open input file: %s\n", argv[1]);
+    exit(1);
+  }
+  yyin = inputFile;
   yyparse();
 
   return 0;
 }
 
 
+void yyerror(const char* s) {
+  printf(stderr, "ERROR: parse error. %s.\n", s);
+  exit(1);
+}
+
+
+/*
 int yyerror(string s)
 {
   extern int yylineno;	// defined and maintained in lex.c
@@ -91,4 +103,4 @@ int yyerror(char *s)
 {
   return yyerror(string(s));
 }
-
+*/
