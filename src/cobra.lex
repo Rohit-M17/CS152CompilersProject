@@ -1,5 +1,7 @@
 %{
 #include <stdio.h>
+#define YY_DECL int yylex(void)
+#include "cobra.tab.h"
 int currline = 1;
 int currpos = 1;
 %}
@@ -109,10 +111,10 @@ RETURN "return"
 {ARRAY}          { currpos = currpos + yyleng; return ARRAY;}
 {RETURN}         { currpos = currpos + yyleng; return RETURN;}
 
-{INVALIDIDENT}   { printf("*********ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
-{IDENT}          { printf("IDENT:         %s\n", yytext); currpos = currpos + yyleng; }
-{DIGIT}+          { printf("NUMBER:        %s\n", yytext); currpos = currpos + yyleng; }
-.                 { printf("*********ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
+{INVALIDIDENT}   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
+{IDENT}          { yylval.ident_val = new std::string(yytext); currpos = currpos + yyleng; return IDENT; }
+{DIGIT}+         { yylval.digit_val = atoi(yytext); currpos = currpos + yyleng; return NUMBER; }
+.                { printf("ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
 %%
 
 /* 

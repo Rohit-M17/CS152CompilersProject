@@ -6,26 +6,25 @@
 #include <stdlib.h>
 
 /*int yyerror(char *s);*/
-int yylex();
-int yyparse();
-extern FILE* yyin;
+/*int yylex();*/
+/*int yyparse();*/
 
-/*extern int yylex();*/
-/*extern int yyparse();*/
-/*extern FILE* yyin;*/
+extern int yylex();
+extern int yyparse();
+extern FILE* yyin;
 
 void yyerror(const char* s);
 %}
 
 %union{
-  int		int_val;
-  string*	op_val;
+  int		digit_val;
+  string*	ident_val;
 }
 
 %start function
 
-%token	<int_val>	INTEGER_LITERAL
-%type	<int_val>	exp
+%token	<digit_val>	DIGIT
+%type	<digit_val>	exp
 %left	PLUS
 %left	MULT
 
@@ -71,9 +70,8 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-
 void yyerror(const char* s) {
-  printf(stderr, "ERROR: parse error. %s.\n", s);
+  printf(stderr, "ERROR: Parse error %s.\n", s);
   exit(1);
 }
 
