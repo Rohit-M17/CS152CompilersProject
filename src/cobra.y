@@ -32,15 +32,6 @@ void yyerror(const char* s);
 
 %%
 
-input:      /* empty */
-		    | exp	{ cout << "Result: " << $1 << endl; }
-		    ;
-
-exp:		INTEGER_LITERAL	{ $$ = $1; }
-		    | exp PLUS exp	{ $$ = $1 + $3; }
-		    | exp MULT exp	{ $$ = $1 * $3; }
-		    ;
-
 function:   %empty
             | FUNCTION IDENT DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION...") }
             ;
