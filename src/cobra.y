@@ -51,6 +51,7 @@ declarations:   %empty { printf("declarations -> epsilon \n"); }
 
 declaration:    identifier COLON DIGIT { printf("declaration -> identifier COLON DIGIT \n"); }
                 | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number { printf("declaration -> identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number \n"); }
+                | { yyerror("Incorrect declaration structure"); }
                 ;
 
 identifier:     IDENT { printf("identifier -> IDENT %s \n", $1); }
@@ -126,6 +127,8 @@ int main(int argc, char *argv[]) {
 }
 
 void yyerror(const char* s) {
-  fprintf(stderr, "ERROR: Parse error %s.\n", s);
+  extern int yylineno;
+  extern char *yytext;
+  fprintf(stderr, "ERROR: (Lexical error) %s on line %d, at token: %s \n", s, yylineno, yytext);
   exit(1);
 }

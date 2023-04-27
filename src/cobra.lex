@@ -8,7 +8,8 @@
 #define YY_DECL int yylex(void)
 #include "cobra.tab.h"
 
-int currline = 1;
+/*int currline = 1;*/
+int yylineno = 1;
 int currpos = 1;
 %}
 
@@ -107,7 +108,7 @@ SIZE "size"
 {WRITE}          { currpos = currpos + yyleng; return WRITE; }
 {COMMENT}+       { /* ignore comments */   currpos = currpos + yyleng; }
 {WHITESPACE}+    { /* ignore whitespace */ currpos = currpos + yyleng; }
-{NEWLINE}+       { /* ignore newline */    currpos = 0; currline = currline + 1; }
+{NEWLINE}+       { /* ignore newline */    currpos = 0; yylineno = yylineno + 1; }
 {FUNCTION}       { currpos = currpos + yyleng; return FUNCTION; }
 {DOT}            { currpos = currpos + yyleng; return DOT; }
 {BEGIN_PARAMS}   { currpos = currpos + yyleng; return BEGIN_PARAMS; }
@@ -121,10 +122,10 @@ SIZE "size"
 {RETURN}         { currpos = currpos + yyleng; return RETURN; }
 {SIZE}           { currpos = currpos + yyleng; return SIZE; }
 
-{INVALIDIDENT}   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
+{INVALIDIDENT}   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno + 2, currpos + 1); currpos + currpos + yyleng; }
 {IDENT}          { yylval.ident_val = strdup(yytext); currpos = currpos + yyleng; return IDENT; }
 {NUMBER}+        { yylval.number_val = atoi(yytext);  currpos = currpos + yyleng; return NUMBER; }
-.                { printf("ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
+.                { printf("ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno + 2, currpos + 1); currpos + currpos + yyleng; }
 %%
 
 /* 
