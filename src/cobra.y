@@ -47,6 +47,7 @@ declarations:   %empty
                 ;
 
 statements:     %empty
+                | DIGIT { printf("Got an integer: %d\n", $1.digit_val); }
                 ;
 
 %%

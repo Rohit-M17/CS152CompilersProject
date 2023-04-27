@@ -7,4 +7,5 @@ locals {
 } locals
 
 body {	// main program
+    3
 } body
