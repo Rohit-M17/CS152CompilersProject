@@ -23,13 +23,14 @@ void yyerror(const char* s);
 %token	<number_val>    NUMBER
 %token	<ident_val>     IDENT
 
-%token	FUNCTION DOT COLON COMMA DIGIT ARRAY SIZE UNDERSCORE COMMENT SUCH NEXT STOP CONTINUE RETURN READ SHOUT NOT
+%token	FUNCTION DOT COLON COMMA DIGIT ARRAY SIZE UNDERSCORE COMMENT SUCH NEXT STOP CONTINUE RETURN READ SHOUT NOT ASSIGN ELSE EQ GT GTE IF LT WHILE WRITE
 
 %left   BEGIN_PARAMS END_PARAMS
 %left   BEGIN_LOCALS END_LOCALS
 %left   BEGIN_BODY END_BODY
 %left   LEFT_BRACKET RIGHT_BRACKET
 %left   LEFT_PARAN RIGHT_PARAN
+%left   LEFT_BRACE RIGHT_BRACE
 %left   ADD SUB
 %left   MULT DIV MOD
 
@@ -70,7 +71,7 @@ statement:      var ASSIGN expression { printf("statement -> var ASSIGN expressi
                 ;
 
 else:           %empty { printf("else -> epsilon \n"); }
-                ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("else -> ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE \n"); }
+                | ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("else -> ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE \n"); }
                 ;
 
 boolexp:        expression comp expression { printf("boolexp -> expression comp expression \n"); }
