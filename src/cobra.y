@@ -23,15 +23,15 @@ void yyerror(const char* s);
 %token	<number_val>    NUMBER
 %token	<ident_val>     IDENT
 
-%token	FUNCTION DOT COLON DIGIT ARRAY SIZE
+%token	FUNCTION DOT COLON COMMA DIGIT ARRAY SIZE UNDERSCORE COMMENT SUCH NEXT ARR[] STOP CONTINUE RETURN READ SHOUT NOT SIZE
 
 %left   BEGIN_PARAMS END_PARAMS
 %left   BEGIN_LOCALS END_LOCALS
 %left   BEGIN_BODY END_BODY
 %left   LEFT_BRACKET RIGHT_BRACKET
+%left   LEFT_PARAN RIGHT_PARAN
 %left   ADD SUB
-%left   MULT DIV
-%left   MOD
+%left   MULT DIV MOD
 
 
 %%
@@ -65,8 +65,8 @@ statements:     %empty { printf("statements -> epsilon \n"); }
 statement:      var ASSIGN expression { printf("statement -> var ASSIGN expression \n"); }
                 | IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else { printf("statement -> IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else \n"); }
                 | WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE \n"); }
-                | READ LEFT_PARAN var RIGHT_PARAN { printf("statement -> READ LEFT_PARAN var RIGHT_PARAN \n"); }
-                | WRITE LEFT_PARAN var RIGHT_PARAN { printf("statement -> WRITE LEFT_PARAN var RIGHT_PARAN \n"); }
+                | READ LEFT_PARAN expression RIGHT_PARAN { printf("statement -> READ LEFT_PARAN expression RIGHT_PARAN \n"); }
+                | WRITE LEFT_PARAN expression RIGHT_PARAN { printf("statement -> WRITE LEFT_PARAN expression RIGHT_PARAN \n"); }
                 ;
 
 else:           %empty { printf("else -> epsilon \n"); }

@@ -7,5 +7,5 @@ locals {
 } locals
 
 body {	// main program
-    3
+    a = 3.
 } body
