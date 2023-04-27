@@ -49,7 +49,7 @@ declarations:   %empty { printf("declarations -> epsilon\n"); }
                 ;
 
 declaration:    identifier COLON DIGIT { printf("declaration -> identifier COLON DIGIT\n"); }
-                | identifier COLON ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number { printf("declaration -> identifier COLON ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number\n"); }
+                | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number { printf("declaration -> identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number\n"); }
                 ;
 
 identifier:     IDENT { printf("identifier -> IDENT %s\n", $1); }
