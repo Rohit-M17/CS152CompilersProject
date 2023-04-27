@@ -23,7 +23,7 @@ void yyerror(const char* s);
 %token	<number_val>    NUMBER
 %token	<ident_val>     IDENT
 
-%token	FUNCTION DOT COLON COMMA DIGIT ARRAY SIZE UNDERSCORE COMMENT SUCH NEXT STOP CONTINUE RETURN READ SHOUT NOT ASSIGN ELSE EQ GT GTE IF LT LTE WHILE WRITE
+%token	FUNCTION DOT COLON COMMA DIGIT ARRAY SIZE UNDERSCORE COMMENT SUCH NEXT STOP CONTINUE RETURN READ SHOUT NOT ASSIGN ELSE EQ NEQ GT GTE IF LT LTE WHILE WRITE
 
 %left   BEGIN_PARAMS END_PARAMS
 %left   BEGIN_LOCALS END_LOCALS
@@ -83,6 +83,7 @@ comp:           EQ { printf("comp -> EQ \n"); }
                 | GT  { printf("comp -> GT \n"); }
                 | LTE  { printf("comp -> LTE \n"); }
                 | GTE  { printf("comp -> GTE \n"); }
+                | NEQ  { printf("comp -> NEQ \n"); }
                 ;
 
 expression:     multexpr { printf("expression -> multexpr \n"); }
