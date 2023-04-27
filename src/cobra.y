@@ -64,7 +64,7 @@ statements:     %empty { printf("statements -> epsilon\n"); }
 
 statement:      number { /* Not correct, continue here */ }
                 ;
-expression:     multexpr { printf("expression -> multexpr \n"); }|
+expression:     multexpr { printf("expression -> multexpr \n"); }
                 | multexpr ADD multexpr { printf("expression -> multexpr ADD multexpr \n"); }
                 | multexpr ADD multexpr { printf("expression -> multexpr SUB multexpr \n"); }
                 ;
