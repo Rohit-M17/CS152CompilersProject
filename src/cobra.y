@@ -64,6 +64,19 @@ statements:     %empty { printf("statements -> epsilon\n"); }
 
 statement:      number { /* Not correct, continue here */ }
                 ;
+
+boolexp:        expression comp expression { printf("boolexp -> expression comp expression \n"); }
+                | Not expression comp expression { printf("boolexp -> NOT expression comp expression \n"); }
+                ;
+
+comp:           EQ EQ  { printf("comp -> EQ EQ \n"); }
+                | LT GT  { printf("comp -> LT GT \n"); }
+                | LT  { printf("comp -> LT \n"); }
+                | GT  { printf("comp -> GT \n"); }
+                | LTE  { printf("comp -> LTE \n"); }
+                | GTE  { printf("comp -> GTE \n"); }
+                ;
+
 expression:     multexpr { printf("expression -> multexpr \n"); }
                 | multexpr ADD multexpr { printf("expression -> multexpr ADD multexpr \n"); }
                 | multexpr ADD multexpr { printf("expression -> multexpr SUB multexpr \n"); }
@@ -83,6 +96,7 @@ term:           var{ printf("term -> var\n"); }
 var:            identifier{ printf("var -> identifier\n"); }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET { printf("var -> identifier LEFT_BRACKET expression RIGHT_BRACKET\n"); }
                 ;
+
 %%
 
 
