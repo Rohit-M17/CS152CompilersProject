@@ -65,6 +65,7 @@ IF "such"
 ELSE "next"
 STOP "stop"
 CONTINUE "continue"
+NOT "not"
 RETURN "return"
 READ "read"
 WRITE "shout"
@@ -99,6 +100,7 @@ SIZE "size"
 {WHILE}          { currpos = currpos + yyleng; return WHILE; }
 {STOP}           { currpos = currpos + yyleng; return STOP; }
 {CONTINUE}       { currpos = currpos + yyleng; return CONTINUE; }
+{NOT}            { currpos = currpos + yyleng; return NOT; }
 {IF}             { currpos = currpos + yyleng; return IF; }
 {ELSE}           { currpos = currpos + yyleng; return ELSE; }
 {READ}           { currpos = currpos + yyleng; return READ; }
