@@ -1,5 +1,6 @@
 /* Scanner Generation - Lexical Analysis */
 /* cobra.lex */
+
 %option noyywrap
 
 %{

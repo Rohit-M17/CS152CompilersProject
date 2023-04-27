@@ -23,7 +23,7 @@ void yyerror(const char* s);
 %token	<number_val>    NUMBER
 %token	<ident_val>     IDENT
 
-%token	FUNCTION DOT COLON DIGIT SIZE
+%token	FUNCTION DOT COLON DIGIT ARRAY SIZE
 
 %left   BEGIN_PARAMS END_PARAMS
 %left   BEGIN_LOCALS END_LOCALS
@@ -62,7 +62,7 @@ statements:     %empty { printf("statements -> epsilon\n"); }
                 | statement DOT statements { printf("statements -> statement statements\n"); }
                 ;
 
-statement:      number { /* Not correct, continue */ }
+statement:      number { /* Not correct, continue here */ }
                 ;
 
 %%
