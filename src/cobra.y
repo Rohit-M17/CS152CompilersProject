@@ -62,9 +62,18 @@ statements:     %empty { printf("statements -> epsilon\n"); }
                 | statement DOT statements { printf("statements -> statement statements\n"); }
                 ;
 
-statement:      number { /* Not correct, continue here */ }
+statement:      var ASSIGN expression { printf("statement -> var ASSIGN expression\n"); }
+                | IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else { printf("statement -> IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else\n"); }
+                | WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE\n"); }
+                | READ LEFT_PARAN var RIGHT_PARAN { printf("statement -> READ LEFT_PARAN var RIGHT_PARAN\n"); }
+                | WRITE LEFT_PARAN var RIGHT_PARAN { printf("statement -> WRITE LEFT_PARAN var RIGHT_PARAN\n"); }
                 ;
-var:            identifier{ printf("var -> identifier\n"); }
+
+else:           %empty { printf("else -> epsilon\n"); }
+                ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("else -> ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE\n"); }
+                ;
+
+var:            identifier { printf("var -> identifier\n"); }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET { printf("var -> identifier LEFT_BRACKET expression RIGHT_BRACKET\n"); }
                 ;
 %%

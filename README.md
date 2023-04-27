@@ -71,7 +71,7 @@
 | continue                                                             | CONTINUE      | 
 | return                                                               | RETURN        |
 | read                                                                 | READ          |
-| shout                                                                | SHOUT         |
+| shout                                                                | WRITE         |
 | size                                                                 | SIZE          |
 | <center> Identifiers and Symbols </center>                           |               | 
 | identifier (e.g., "aardvark", "BIG_PENGUIN", "fLaMInGo_17", "ot73r") | IDENT XXXX    | 

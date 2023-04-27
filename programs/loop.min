@@ -14,6 +14,6 @@ body {
     during i lessthan 10 {
       i = i sum 1.
       shout(i).
-    } during
+    }
 
 } body

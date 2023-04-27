@@ -67,7 +67,7 @@ STOP "stop"
 CONTINUE "continue"
 RETURN "return"
 READ "read"
-SHOUT "shout"
+WRITE "shout"
 SIZE "size"
 
 %%
@@ -102,7 +102,7 @@ SIZE "size"
 {IF}             { currpos = currpos + yyleng; return IF; }
 {ELSE}           { currpos = currpos + yyleng; return ELSE; }
 {READ}           { currpos = currpos + yyleng; return READ; }
-{SHOUT}          { currpos = currpos + yyleng; return SHOUT; }
+{WRITE}          { currpos = currpos + yyleng; return WRITE; }
 {COMMENT}+       { /* ignore comments */   currpos = currpos + yyleng; }
 {WHITESPACE}+    { /* ignore whitespace */ currpos = currpos + yyleng; }
 {NEWLINE}+       { /* ignore newline */    currpos = 0; currline = currline + 1; }
