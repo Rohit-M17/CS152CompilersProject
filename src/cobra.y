@@ -64,6 +64,22 @@ statements:     %empty { printf("statements -> epsilon\n"); }
 
 statement:      number { /* Not correct, continue here */ }
                 ;
+expression:     multexpr { printf("expression -> multexpr \n"); }|
+                | multexpr ADD multexpr { printf("expression -> multexpr ADD multexpr \n"); }
+                | multexpr ADD multexpr { printf("expression -> multexpr SUB multexpr \n"); }
+                ;
+
+multexpr:       term { printf("multexpr -> term\n"); }
+                | term MULT term { printf("multexpr -> term MULT term\n"); }
+                | term DIV term { printf("multexpr -> term DIV term\n"); }
+                | term MOD term { printf("multexpr -> term MOD term\n"); }
+                ;
+
+term:           var{ printf("term -> var\n"); }
+                | number { printf("term -> number\n"); }
+                | LEFT_PARAN expression RIGHT_PARAN { printf("term -> LEFT_PARAN expression RIGHT_PARAN\n"); }
+                ;
+
 var:            identifier{ printf("var -> identifier\n"); }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET { printf("var -> identifier LEFT_BRACKET expression RIGHT_BRACKET\n"); }
                 ;
