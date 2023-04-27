@@ -4,8 +4,11 @@ params {
 } params
 
 locals {
+    a - digit arr[] size 20.
+    b : digit.
 } locals
 
 body {	// main program
-    a = 3.
+    a[0] = b sum c.
+    b = 3.
 } body
