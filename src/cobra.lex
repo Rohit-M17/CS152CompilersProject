@@ -1,15 +1,18 @@
+/* Scanner Generation - Lexical Analysis */
+/* cobra.lex */
+%option noyywrap
+
 %{
 #include <stdio.h>
 #define YY_DECL int yylex(void)
 #include "cobra.tab.h"
+
 int currline = 1;
 int currpos = 1;
 %}
 
-extern FILE* yyin;
-
 /* Definitions for regular expressions */
-DIGIT [0-9]
+NUMBER [0-9]
 ALPHA [a-z]|[A-Z]
 IDENT [a-zA-Z_][a-zA-Z0-9_]*
 COMMENT \/\/.*\n
@@ -19,7 +22,7 @@ INVALIDIDENT [0-9]+[A-Za-z_]+
 
 /* Definitions for token patterns */
 /* Arithmetic Operators */
-ASSIGNMENT "="
+ASSIGN "="
 ADD "sum"
 SUB "sub"
 MULT "mult"
@@ -35,85 +38,89 @@ LTE "lessorequal"
 GTE "greaterorequal"
 
 /* Other Symbols */
-LEFT_BRACE "{"
-RIGHT_BRACE "}"
+DOT "."
 COLON ":"
 LEFT_PARAN "("
 RIGHT_PARAN ")"
+LEFT_BRACE "{"
+RIGHT_BRACE "}"
 LEFT_BRACKET "["
 RIGHT_BRACKET "]"
 COMMA ","
 UNDERSCORE "_"
 
 /* Reserved Words */
-WHILE "during"
-STOP "stop"
-CONTINUE "continue"
-SUCH "such"
-NEXT "next"
-READ "read"
-SHOUT "shout"
 FUNCTION "funct"
-DOT "."
 BEGIN_PARAMS "params {"
 END_PARAMS "} params"
 BEGIN_LOCALS "locals {"
 END_LOCALS "} locals"
 BEGIN_BODY "body {"
 END_BODY "} body"
+DIGIT "digit"
+WHILE "during"
 ARRAY "arr"
+IF "such"
+ELSE "next"
+STOP "stop"
+CONTINUE "continue"
 RETURN "return"
+READ "read"
+SHOUT "shout"
+SIZE "size"
 
 %%
 
-{ASSIGNMENT}     {  currpos = currpos + yyleng; return ASSIGNMENT;}
-{ADD}            {  currpos = currpos + yyleng; return ADD;}
-{SUB}            {  currpos = currpos + yyleng;  return SUB;}
-{MULT}           {  currpos = currpos + yyleng; return MULT;}
-{DIV}            {  currpos = currpos + yyleng; return DIV;}
-{MOD}            {  currpos = currpos + yyleng; return MOD;}
+{ASSIGN}         { currpos = currpos + yyleng; return ASSIGN; }
+{ADD}            { currpos = currpos + yyleng; return ADD; }
+{SUB}            { currpos = currpos + yyleng; return SUB; }
+{MULT}           { currpos = currpos + yyleng; return MULT; }
+{DIV}            { currpos = currpos + yyleng; return DIV; }
+{MOD}            { currpos = currpos + yyleng; return MOD; }
 
-{EQ}             { currpos = currpos + yyleng; return EQ;}
-{NEQ}            { currpos = currpos + yyleng; return NEQ;}
-{LT}             { currpos = currpos + yyleng; return LT;}
-{GT}             { currpos = currpos + yyleng; return GT;}
-{LTE}            { currpos = currpos + yyleng; return LTE;}
-{GTE}            { currpos = currpos + yyleng; return GTE;}
+{EQ}             { currpos = currpos + yyleng; return EQ; }
+{NEQ}            { currpos = currpos + yyleng; return NEQ; }
+{LT}             { currpos = currpos + yyleng; return LT; }
+{GT}             { currpos = currpos + yyleng; return GT; }
+{LTE}            { currpos = currpos + yyleng; return LTE; }
+{GTE}            { currpos = currpos + yyleng; return GTE; }
 
-{LEFT_BRACE}     { currpos = currpos + yyleng; return LEFT_BRACE;}
-{RIGHT_BRACE}    { currpos = currpos + yyleng; return RIGHT_BRACE;}
-{COLON}          { currpos = currpos + yyleng; return COLON;}
-{LEFT_PARAN}     { currpos = currpos + yyleng; return LEFT_PARAN;}
-{RIGHT_PARAN}    { currpos = currpos + yyleng; return RIGHT_PARAN;}
-{LEFT_BRACKET}   { currpos = currpos + yyleng; return LEFT_BRACKET;}
-{RIGHT_BRACKET}  { currpos = currpos + yyleng; return RIGHT_BRACKET;}
-{COMMA}          { currpos = currpos + yyleng; return COMMA;}        
-{UNDERSCORE}     { currpos = currpos + yyleng; return UNDERSCORE;}
+{LEFT_BRACE}     { currpos = currpos + yyleng; return LEFT_BRACE; }
+{RIGHT_BRACE}    { currpos = currpos + yyleng; return RIGHT_BRACE; }
+{COLON}          { currpos = currpos + yyleng; return COLON; }
+{LEFT_PARAN}     { currpos = currpos + yyleng; return LEFT_PARAN; }
+{RIGHT_PARAN}    { currpos = currpos + yyleng; return RIGHT_PARAN; }
+{LEFT_BRACKET}   { currpos = currpos + yyleng; return LEFT_BRACKET; }
+{RIGHT_BRACKET}  { currpos = currpos + yyleng; return RIGHT_BRACKET; }
+{COMMA}          { currpos = currpos + yyleng; return COMMA; }
+{UNDERSCORE}     { currpos = currpos + yyleng; return UNDERSCORE; }
 
-{WHILE}          { currpos = currpos + yyleng; return WHILE;}
-{STOP}           { currpos = currpos + yyleng; return STOP;}
-{CONTINUE}       { currpos = currpos + yyleng; return CONTINUE;}
-{SUCH}           { currpos = currpos + yyleng; return SUCH;}
-{NEXT}           { currpos = currpos + yyleng; return NEXT;}
-{READ}           { currpos = currpos + yyleng; return READ;}
-{SHOUT}          { currpos = currpos + yyleng; return SHOUT;}
-{COMMENT}+        { /* ignore comments */ currpos = currpos + yyleng; }
-{WHITESPACE}+     { /* ignore whitespace */ currpos = currpos + yyleng; }
-{NEWLINE}+        { /* ignore newline */ currpos = 0; currline = currline + 1;}
-{FUNCTION}       { currpos = currpos + yyleng; return FUNCTION;}
-{DOT}            { currpos = currpos + yyleng; return DOT;}
-{BEGIN_PARAMS}   { currpos = currpos + yyleng; return BEGIN_PARAMS;}
-{END_PARAMS}     { currpos = currpos + yyleng; return END_PARAMS;}
-{BEGIN_LOCALS}   { currpos = currpos + yyleng; return BEGIN_LOCALS;}
-{END_LOCALS}     { currpos = currpos + yyleng; return END_LOCALS;}
-{BEGIN_BODY}     { currpos = currpos + yyleng; return BEGIN_BODY;}
-{END_BODY}       { currpos = currpos + yyleng; return END_BODY;}
-{ARRAY}          { currpos = currpos + yyleng; return ARRAY;}
-{RETURN}         { currpos = currpos + yyleng; return RETURN;}
+{WHILE}          { currpos = currpos + yyleng; return WHILE; }
+{STOP}           { currpos = currpos + yyleng; return STOP; }
+{CONTINUE}       { currpos = currpos + yyleng; return CONTINUE; }
+{IF}             { currpos = currpos + yyleng; return IF; }
+{ELSE}           { currpos = currpos + yyleng; return ELSE; }
+{READ}           { currpos = currpos + yyleng; return READ; }
+{SHOUT}          { currpos = currpos + yyleng; return SHOUT; }
+{COMMENT}+       { /* ignore comments */   currpos = currpos + yyleng; }
+{WHITESPACE}+    { /* ignore whitespace */ currpos = currpos + yyleng; }
+{NEWLINE}+       { /* ignore newline */    currpos = 0; currline = currline + 1; }
+{FUNCTION}       { currpos = currpos + yyleng; return FUNCTION; }
+{DOT}            { currpos = currpos + yyleng; return DOT; }
+{BEGIN_PARAMS}   { currpos = currpos + yyleng; return BEGIN_PARAMS; }
+{END_PARAMS}     { currpos = currpos + yyleng; return END_PARAMS; }
+{BEGIN_LOCALS}   { currpos = currpos + yyleng; return BEGIN_LOCALS; }
+{END_LOCALS}     { currpos = currpos + yyleng; return END_LOCALS; }
+{BEGIN_BODY}     { currpos = currpos + yyleng; return BEGIN_BODY; }
+{END_BODY}       { currpos = currpos + yyleng; return END_BODY; }
+{DIGIT}          { currpos = currpos + yyleng; return DIGIT; }
+{ARRAY}          { currpos = currpos + yyleng; return ARRAY; }
+{RETURN}         { currpos = currpos + yyleng; return RETURN; }
+{SIZE}           { currpos = currpos + yyleng; return SIZE; }
 
 {INVALIDIDENT}   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
-{IDENT}          { yylval.ident_val = new std::string(yytext); currpos = currpos + yyleng; return IDENT; }
-{DIGIT}+         { yylval.digit_val = atoi(yytext); currpos = currpos + yyleng; return NUMBER; }
+{IDENT}          { yylval.ident_val = strdup(yytext); currpos = currpos + yyleng; return IDENT; }
+{NUMBER}+        { yylval.number_val = atoi(yytext);  currpos = currpos + yyleng; return NUMBER; }
 .                { printf("ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, currline + 2, currpos + 1); currpos + currpos + yyleng; }
 %%
 

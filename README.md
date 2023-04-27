@@ -17,7 +17,7 @@
 ## Compiler features and code example
 | Language Feature                                                      | Code Example                                                                                                                                         |
 |-----------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Integer scalar variables                                              | digit x.                                                                                                                                             |
+| Integer scalar variables                                              | b : digit.                                                                                                                                           |
 | One-dimensional arrays of integers                                    | digit arr[1, 2, 3].<br>digit arr[] size 5                                                                                                            |
 | Assignment statements                                                 | x = 1.                                                                                                                                               |
 | Arithmetic operators (e.g., “+”, “-”, “*”, “/”)                       | sum, sub, mult, div                                                                                                                                  | 
@@ -66,10 +66,13 @@
 | during                                                               | WHILE         | 
 | arr[]                                                                | ARRAY         |
 | such                                                                 | IF            | 
-| next                                                                 | NEXT          |
+| next                                                                 | ELSE          |
 | stop                                                                 | STOP          |
 | continue                                                             | CONTINUE      | 
 | return                                                               | RETURN        |
+| read                                                                 | READ          |
+| shout                                                                | SHOUT         |
+| size                                                                 | SIZE          |
 | <center> Identifiers and Symbols </center>                           |               | 
 | identifier (e.g., "aardvark", "BIG_PENGUIN", "fLaMInGo_17", "ot73r") | IDENT XXXX    | 
 | number (e.g., "17", "101", "90210", "0", "8675309")                  | NUMBER XXXX   | 
@@ -85,4 +88,3 @@
 | ,                                                                    | COMMA         |
 | //                                                                   | COMMENT       |
 | _                                                                    | UNDERSCORE    |
-| "                                                                    | QUOTATION     |

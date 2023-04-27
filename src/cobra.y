@@ -1,13 +1,10 @@
-/* Parser Generation */
+/* Parser Generation - Syntax Analysis */
 /* cobra.y */
 
 %{
 #include <stdio.h>
 #include <stdlib.h>
-
-/*int yyerror(char *s);*/
-/*int yylex();*/
-/*int yyparse();*/
+#include <string>
 
 extern int yylex();
 extern int yyparse();
@@ -16,63 +13,65 @@ extern FILE* yyin;
 void yyerror(const char* s);
 %}
 
-%union{
-  int		digit_val;
-  string*	ident_val;
+%union {
+  int       number_val;
+  char*     ident_val;
 }
 
-%define YYSTYPE union
-%define yylval YYSTYPE
+%start prog_start
 
-%start function
+%token	<number_val>    NUMBER
+%token	<ident_val>     IDENT
 
-%token	<digit_val>	DIGIT
-%type   <ident_val> declarations
-%type   <ident_val> statements
-%left	FUNCTION
-%left	IDENT
-%left	DOT
+%token	FUNCTION DOT COLON DIGIT SIZE
+
 %left   BEGIN_PARAMS END_PARAMS
 %left   BEGIN_LOCALS END_LOCALS
 %left   BEGIN_BODY END_BODY
+%left   LEFT_BRACKET RIGHT_BRACKET
+%left   ADD SUB
+%left   MULT DIV
+%left   MOD
 
 
 %%
+prog_start:     functions { printf("prog_start -> functions\n"); }
 
-function:       %empty
-                | FUNCTION IDENT DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION..."); }
+functions:      %empty { printf("functions -> epsilon\n"); }
+                | function functions { printf("functions -> function functions\n"); }
                 ;
 
-declarations:   %empty
+function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY\n"); }
                 ;
 
-statements:     %empty
-                | DIGIT { printf("Got an integer: %d\n", $1.digit_val); }
+declarations:   %empty { printf("declarations -> epsilon\n"); }
+                | declaration DOT declarations { printf("declarations -> declaration DOT declarations\n"); }
+                ;
+
+declaration:    identifier COLON DIGIT { printf("declaration -> identifier COLON DIGIT\n"); }
+                | identifier COLON ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number { printf("declaration -> identifier COLON ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number\n"); }
+                ;
+
+identifier:     IDENT { printf("identifier -> IDENT %s\n", $1); }
+                ;
+
+number:         NUMBER { printf("number -> NUMBER %d\n", $1); }
+                ;
+
+statements:     %empty { printf("statements -> epsilon\n"); }
+                | statement DOT statements { printf("statements -> statement statements\n"); }
+                ;
+
+statement:      number { /* Not correct, continue */ }
                 ;
 
 %%
-/*
-int main() {
-  yyin = stdin;
 
-  do {
-    printf("Parse.\n");
-    yyparse();
-  } while(!feof(yyin));
-  printf("Parenthesis are balanced!\n");
-  return 0;
-}
-
-void yyerror(const char* s) {
-  fprintf(stderr, "Parse error: %s. Parenthesis are not balanced!\n", s);
-  exit(1);
-}
-*/
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-      printf("Not correct usage of the command.", argv[0]);
-      exit(1);
+    printf("Not correct usage of the command.", argv[0]);
+    exit(1);
   }
   FILE *inputFile = fopen(argv[1], "r");
   if (inputFile == NULL) {
@@ -89,22 +88,3 @@ void yyerror(const char* s) {
   fprintf(stderr, "ERROR: Parse error %s.\n", s);
   exit(1);
 }
-
-
-/*
-int yyerror(string s)
-{
-  extern int yylineno;	// defined and maintained in lex.c
-  extern char *yytext;	// defined and maintained in lex.c
-
-  cerr << "ERROR: " << s << " at symbol \"" << yytext;
-  cerr << "\" on line " << yylineno << endl;
-  exit(1);
-}
-
-
-int yyerror(char *s)
-{
-  return yyerror(string(s));
-}
-*/
