@@ -74,8 +74,39 @@ else:           %empty { printf("else -> epsilon\n"); }
                 ;
 
 var:            identifier { printf("var -> identifier\n"); }
+
+boolexp:        expression comp expression { printf("boolexp -> expression comp expression \n"); }
+                | Not expression comp expression { printf("boolexp -> NOT expression comp expression \n"); }
+                ;
+
+comp:           EQ EQ  { printf("comp -> EQ EQ \n"); }
+                | LT GT  { printf("comp -> LT GT \n"); }
+                | LT  { printf("comp -> LT \n"); }
+                | GT  { printf("comp -> GT \n"); }
+                | LTE  { printf("comp -> LTE \n"); }
+                | GTE  { printf("comp -> GTE \n"); }
+                ;
+
+expression:     multexpr { printf("expression -> multexpr \n"); }
+                | multexpr ADD multexpr { printf("expression -> multexpr ADD multexpr \n"); }
+                | multexpr ADD multexpr { printf("expression -> multexpr SUB multexpr \n"); }
+                ;
+
+multexpr:       term { printf("multexpr -> term\n"); }
+                | term MULT term { printf("multexpr -> term MULT term\n"); }
+                | term DIV term { printf("multexpr -> term DIV term\n"); }
+                | term MOD term { printf("multexpr -> term MOD term\n"); }
+                ;
+
+term:           var{ printf("term -> var\n"); }
+                | number { printf("term -> number\n"); }
+                | LEFT_PARAN expression RIGHT_PARAN { printf("term -> LEFT_PARAN expression RIGHT_PARAN\n"); }
+                ;
+
+var:            identifier{ printf("var -> identifier\n"); }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET { printf("var -> identifier LEFT_BRACKET expression RIGHT_BRACKET\n"); }
                 ;
+
 %%
 
 
