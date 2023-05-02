@@ -70,7 +70,7 @@ statement:      var ASSIGN expression { printf("statement -> var ASSIGN expressi
                 | READ LEFT_PARAN expression RIGHT_PARAN { printf("statement -> READ LEFT_PARAN expression RIGHT_PARAN \n"); }
                 | WRITE LEFT_PARAN expression RIGHT_PARAN { printf("statement -> WRITE LEFT_PARAN expression RIGHT_PARAN \n"); }
                 | continue  { printf("statement -> continue\n"); }
-                | stop  { printf("statement -> stop DOT\n"); }
+                | stop  { printf("statement -> stop\n"); }
                 ;
 
 else:           %empty { printf("else -> epsilon \n"); }
@@ -112,7 +112,7 @@ var:            identifier { printf("var -> identifier \n"); }
 continue:       CONTINUE { printf("continue -> CONTINUE\n"); }
                 ;
 
-stop:           STOP { printf("stop -> STOP\n"); }
+stop:           STOP DOT { printf("stop -> STOP DOT\n"); }
                 ;
 %%
 
