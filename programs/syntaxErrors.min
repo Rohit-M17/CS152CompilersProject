@@ -11,4 +11,4 @@ locals {
 body {	// main program
     a[0] = b sum c.
     b = 3.
-} body
+}; body
