@@ -110,8 +110,8 @@ var:            identifier { printf("var -> identifier \n"); }
 continue:       CONTINUE { printf:("continue -> CONTINUE\n"); }
                 ;
 
-stop:           STOP { printf:("stop. -> STOP\n"); }
-               ;
+stop:           STOP { printf:("stop -> STOP\n"); }
+                ;
 %%
 
 
