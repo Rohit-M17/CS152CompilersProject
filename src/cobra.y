@@ -10,7 +10,7 @@ extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
 
-void yyerror(const char* s);
+int yyerror(const char* s);
 %}
 
 %union {
@@ -123,10 +123,10 @@ int main(int argc, char *argv[]) {
   yyin = inputFile;
   yyparse();
 
-  return 0;
+  return (yyerror(const char* s));
 }
 
-void yyerror(const char* s) {
+int yyerror(const char* s) {
   extern int yylineno;
   extern char *yytext;
   fprintf(stderr, "ERROR: (syntax error) %s on line %d, at token: %s \n", s, yylineno, yytext);
