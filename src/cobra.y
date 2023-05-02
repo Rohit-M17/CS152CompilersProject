@@ -69,6 +69,8 @@ statement:      var ASSIGN expression { printf("statement -> var ASSIGN expressi
                 | WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE \n"); }
                 | READ LEFT_PARAN expression RIGHT_PARAN { printf("statement -> READ LEFT_PARAN expression RIGHT_PARAN \n"); }
                 | WRITE LEFT_PARAN expression RIGHT_PARAN { printf("statement -> WRITE LEFT_PARAN expression RIGHT_PARAN \n"); }
+                | continue  { printf("statement -> continue\n");
+                | stop  { printf("statement -> stop DOT\n");
                 ;
 
 else:           %empty { printf("else -> epsilon \n"); }
