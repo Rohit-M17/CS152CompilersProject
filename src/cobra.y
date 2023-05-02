@@ -61,21 +61,26 @@ number:         NUMBER { printf("number -> NUMBER %d \n", $1); }
                 ;
 
 statements:     %empty { printf("statements -> epsilon \n"); }
-                | statement DOT statements { printf("statements -> statement statements \n"); }
+                | statement statements { printf("statements -> statement statements \n"); }
                 ;
 
+
+
 statement:      var ASSIGN expression DOT{ printf("statement -> var ASSIGN expression DOT\n"); }
-                | IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else { printf("statement -> IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else \n"); }
-                | IF IDENT LEFT_BRACE statement DOT statements RIGHT_BRACE else { printf("statement -> IF IDENT LEFT_BRACE statement DOT statements RIGHT_BRACE else \n"); }
-                | WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE \n"); }
-                | READ LEFT_PARAN expression RIGHT_PARAN { printf("statement -> READ LEFT_PARAN expression RIGHT_PARAN \n"); }
-                | WRITE LEFT_PARAN expression RIGHT_PARAN { printf("statement -> WRITE LEFT_PARAN expression RIGHT_PARAN \n"); }
-                | CONTINUE  { printf("statement -> CONTINUE \n"); }
-                | STOP  { printf("statement -> STOP \n"); }
+                | IF boolexp LEFT_BRACE statement RIGHT_BRACE else { printf("statement -> IF boolexp LEFT_BRACE statement RIGHT_BRACE else \n"); }
+                | IF IDENT LEFT_BRACE statement RIGHT_BRACE else { printf("statement -> IF IDENT LEFT_BRACE statement RIGHT_BRACE else \n"); }
+                | WHILE boolexp LEFT_BRACE statement RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statement RIGHT_BRACE \n"); }
+                | IF boolexp LEFT_BRACE statements RIGHT_BRACE else { printf("statement -> IF boolexp LEFT_BRACE statements RIGHT_BRACE else \n"); }
+                | IF IDENT LEFT_BRACE statements RIGHT_BRACE else { printf("statement -> IF IDENT LEFT_BRACE statements RIGHT_BRACE else \n"); }
+                | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statements RIGHT_BRACE \n"); }
+                | READ LEFT_PARAN expression RIGHT_PARAN DOT{ printf("statement -> READ LEFT_PARAN expression RIGHT_PARAN \n"); }
+                | WRITE LEFT_PARAN expression RIGHT_PARAN DOT{ printf("statement -> WRITE LEFT_PARAN expression RIGHT_PARAN \n"); }
+                | CONTINUE DOT { printf("statement -> CONTINUE \n"); }
+                | STOP DOT{ printf("statement -> STOP \n"); }
                 ;
 
 else:           %empty { printf("else -> epsilon \n"); }
-                | ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("else -> ELSE LEFT_BRACE statement DOT statements RIGHT_BRACE \n"); }
+                | ELSE LEFT_BRACE statements RIGHT_BRACE { printf("else -> ELSE LEFT_BRACE statements RIGHT_BRACE \n"); }
                 ;
 
 boolexp:        expression comp expression { printf("boolexp -> expression comp expression \n"); }
@@ -91,14 +96,14 @@ comp:           EQ { printf("comp -> EQ \n"); }
                 ;
 
 expression:     multexpr { printf("expression -> multexpr \n"); }
-                | multexpr ADD multexpr DOT { printf("expression -> multexpr ADD multexpr DOT\n"); }
-                | multexpr SUB multexpr DOT { printf("expression -> multexpr SUB multexpr DOT\n"); }
+                | multexpr ADD multexpr  { printf("expression -> multexpr ADD multexpr \n"); }
+                | multexpr SUB multexpr  { printf("expression -> multexpr SUB multexpr \n"); }
                 ;
 
 multexpr:       term { printf("multexpr -> term \n"); }
-                | term MULT term DOT { printf("multexpr -> term MULT term DOT\n"); }
-                | term DIV term DOT { printf("multexpr -> term DIV term DOT\n"); }
-                | term MOD term DOT { printf("multexpr -> term MOD term DOT\n"); }
+                | term MULT term { printf("multexpr -> term MULT term \n"); }
+                | term DIV term  { printf("multexpr -> term DIV term \n"); }
+                | term MOD term  { printf("multexpr -> term MOD term \n"); }
                 ;
 
 term:           var { printf("term -> var \n"); }
