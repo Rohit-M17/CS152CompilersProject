@@ -75,6 +75,7 @@ statement:      var ASSIGN expression DOT{ printf("statement -> var ASSIGN expre
                 | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statements RIGHT_BRACE \n"); }
                 | READ LEFT_PARAN expression RIGHT_PARAN DOT{ printf("statement -> READ LEFT_PARAN expression RIGHT_PARAN \n"); }
                 | WRITE LEFT_PARAN expression RIGHT_PARAN DOT{ printf("statement -> WRITE LEFT_PARAN expression RIGHT_PARAN \n"); }
+                | RETURN expression DOT { printf("RETURN expression DOT\n"); }
                 | CONTINUE DOT { printf("statement -> CONTINUE \n"); }
                 | STOP DOT{ printf("statement -> STOP \n"); }
                 ;
