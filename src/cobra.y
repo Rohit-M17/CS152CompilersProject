@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
   yyin = inputFile;
   yyparse();
 
-  return 0;
+  return yyerror(const char* s);
 }
 
 int yyerror(const char* s) {
