@@ -106,10 +106,6 @@ term:           var { printf("term -> var \n"); }
 var:            identifier { printf("var -> identifier \n"); }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET { printf("var -> identifier LEFT_BRACKET expression RIGHT_BRACKET \n"); }
                 ;
-
-error:          %empty { printf("*** reached error\n"); yyerror("Syntax error"); }
-                ;
-
 %%
 
 
