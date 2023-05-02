@@ -106,6 +106,12 @@ term:           var { printf("term -> var \n"); }
 var:            identifier { printf("var -> identifier \n"); }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET { printf("var -> identifier LEFT_BRACKET expression RIGHT_BRACKET \n"); }
                 ;
+
+continue:       CONTINUE { printf:("continue -> CONTINUE\n"); }
+                ;
+
+stop           STOP { printf:("stop -> STOP\n"); }
+               ;
 %%
 
 
