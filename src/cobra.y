@@ -64,7 +64,7 @@ statements:     %empty { printf("statements -> epsilon \n"); }
                 | statement DOT statements { printf("statements -> statement statements \n"); }
                 ;
 
-statement:      var ASSIGN expression { printf("statement -> var ASSIGN expression \n"); }
+statement:      var ASSIGN expression DOT{ printf("statement -> var ASSIGN expression DOT\n"); }
                 | IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else { printf("statement -> IF boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE else \n"); }
                 | IF IDENT LEFT_BRACE statement DOT statements RIGHT_BRACE else { printf("statement -> IF IDENT LEFT_BRACE statement DOT statements RIGHT_BRACE else \n"); }
                 | WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE { printf("statement -> WHILE boolexp LEFT_BRACE statement DOT statements RIGHT_BRACE \n"); }
@@ -91,14 +91,14 @@ comp:           EQ { printf("comp -> EQ \n"); }
                 ;
 
 expression:     multexpr { printf("expression -> multexpr \n"); }
-                | multexpr ADD multexpr { printf("expression -> multexpr ADD multexpr \n"); }
-                | multexpr SUB multexpr { printf("expression -> multexpr SUB multexpr \n"); }
+                | multexpr ADD multexpr DOT { printf("expression -> multexpr ADD multexpr DOT\n"); }
+                | multexpr SUB multexpr DOT { printf("expression -> multexpr SUB multexpr DOT\n"); }
                 ;
 
 multexpr:       term { printf("multexpr -> term \n"); }
-                | term MULT term { printf("multexpr -> term MULT term \n"); }
-                | term DIV term { printf("multexpr -> term DIV term \n"); }
-                | term MOD term { printf("multexpr -> term MOD term \n"); }
+                | term MULT term DOT { printf("multexpr -> term MULT term DOT\n"); }
+                | term DIV term DOT { printf("multexpr -> term DIV term DOT\n"); }
+                | term MOD term DOT { printf("multexpr -> term MOD term DOT\n"); }
                 ;
 
 term:           var { printf("term -> var \n"); }
