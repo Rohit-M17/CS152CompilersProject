@@ -13,7 +13,7 @@ body {
 } body
 
 
-funct mult.
+funct multiplicate.
 params {
   a : digit.
   b : digit.

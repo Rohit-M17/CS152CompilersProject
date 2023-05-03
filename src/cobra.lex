@@ -122,10 +122,10 @@ SIZE "size"
 {RETURN}         { currpos = currpos + yyleng; return RETURN; }
 {SIZE}           { currpos = currpos + yyleng; return SIZE; }
 
-{INVALIDIDENT}   { printf("ERROR: Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1); currpos + currpos + yyleng; }
+{INVALIDIDENT}   { printf("ERROR: (lexical error) Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1); currpos + currpos + yyleng; }
 {IDENT}          { yylval.ident_val = strdup(yytext); currpos = currpos + yyleng; return IDENT; }
 {NUMBER}+        { yylval.number_val = atoi(yytext);  currpos = currpos + yyleng; return NUMBER; }
-.                { printf("ERROR: Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1); currpos + currpos + yyleng; }
+.                { printf("ERROR: (lexical error) Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1); currpos + currpos + yyleng; }
 %%
 
 /* 
