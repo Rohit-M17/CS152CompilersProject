@@ -33,9 +33,8 @@ struct Function {
 
 std::vector <Function> symbol_table;
 
-// remember that Bison is a bottom up parser: that it parses leaf nodes first before
-// parsing the parent nodes. So control flow begins at the leaf grammar nodes
-// and propagates up to the parents.
+// Remember that Bison is a bottom up parser: that it parses leaf nodes first before parsing the parent nodes.
+// So control flow begins at the leaf grammar nodes and propagates up to the parents.
 Function *get_function() {
   int last = symbol_table.size()-1;
   if (last < 0) {
@@ -85,6 +84,7 @@ void print_symbol_table(void) {
 %union {
   int       number_val;
   char*     ident_val;
+  struct    CodeNode *node;
 }
 
 %start prog_start
@@ -103,47 +103,119 @@ void print_symbol_table(void) {
 %left   ADD SUB
 %left   MULT DIV MOD
 
+%type   <code_node>     functions
+%type   <code_node>     function
+%type   <code_node>     declarations
+%type   <code_node>     declaration
+%type   <code_node>     statements
+%type   <code_node>     statement
+
+%type   <ident_val>     identifier
+%type   <number_val>    number
+
 
 %%
-prog_start:     functions {  }
+prog_start:     functions {
+                    CodeNode *code_node = $1;
+                    printf("%s\n", code_node->code.c_str());
+                }
 
-functions:      %empty {  }
-                | function functions {  }
+functions:      %empty {
+                    CodeNode *node = new CodeNode;
+                    $$ = node;
+                }
+                | function functions {
+                    CodeNode *function = $1;
+                    CodeNode *functions = $2;
+                    CodeNode *node = new CodeNode;
+                    node->code = function->code + functions->code;
+                    $$ = node;
+                }
                 ;
 
-function:       FUNCTION function_ident DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
-                printf("endfunc\n"); }
+function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
+                    CodeNode *node = new CodeNode;
+                    std::string func_name = $2;
+                    node->code = "";
+                    // Add function name
+                    node->code += std::string("func ") + func_name + std::string("\n");
+                    // Add param declarations
+                    CodeNode *params = $5;
+                    node->code += params->code;
+                    // Add local declarations
+                    CodeNode *locals = $8;
+                    node->code += locals->code;
+                    // Add statements
+                    CodeNode *statements = $11;
+                    node->code += statements->code;
+                    node->code += std::string("endfunc\n");
+                    $$ = node;
+                }
                 ;
 
 function_ident: IDENT {
-                // add the function to the symbol table
-                std::string func_name = $1;
-                add_function_to_symbol_table(func_name);
-                printf("func %s\n", func_name.c_str()); }
+                    // add the function to the symbol table
+                    //std::string func_name = $1;
+                    //add_function_to_symbol_table(func_name);
+                    //printf("func %s\n", func_name.c_str());
+                }
                 ;
 
-declarations:   %empty {  }
-                | declaration DOT declarations {  }
+declarations:   %empty {
+                    CodeNode *node = new CodeNode;
+                    $$ = node;
+                }
+                | declaration DOT declarations {
+                    CodeNode *declaration = $1;
+                    CodeNode *declarations = $3;
+                    CodeNode *node = new CodeNode;
+                    node->code = declaration->code + declarations->code;
+                    $$ = node;
+                }
                 ;
 
-declaration:    identifier COLON DIGIT {  }
-                | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number {  }
+declaration:    identifier COLON DIGIT {
+                    CodeNode *node = new CodeNode;
+                    std::string id = $1;
+                    node->code = std::string(". ") + id + std::string("\n");
+                    $$ = node;
+                }
+                | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number {
+
+                }
                 | error { yyerror("Incorrect declaration structure"); }
                 ;
 
-identifier:     IDENT {  }
+identifier:     IDENT { $$ = $1 }
                 ;
 
-number:         NUMBER {  }
+number:         NUMBER { $$ = $1 }
                 ;
 
-statements:     %empty {  }
-                | statement statements {  }
+statements:     %empty {
+                    CodeNode *node = new CodeNode;
+                    $$ = node;
+                }
+                | statement statements {
+                    CodeNode *statement = $1;
+                    CodeNode *statements = $2;
+                    CodeNode *node = new CodeNode;
+                    node->code = statement->code + statements->code;
+                    $$ = node;
+                }
                 ;
 
 
 
-statement:      var ASSIGN expression DOT                           {  }
+statement:      var ASSIGN expression DOT {
+                    CodeNode *node = new CodeNode;
+                    std::string var = $1;
+                    CodeNode *expression = $3;
+                    node->code = "";
+                    // **** We have to make it work with arrays as well
+                    node->code += std::string("= ") + var + std::string(", ") + expression->name;
+                    $$ = node;
+                }
                 | IF boolexp LEFT_BRACE statement RIGHT_BRACE else  {  }
                 | IF IDENT LEFT_BRACE statement RIGHT_BRACE else    {  }
                 | WHILE boolexp LEFT_BRACE statement RIGHT_BRACE    {  }
@@ -184,12 +256,12 @@ multexpr:       term             {  }
                 | term MOD term  {  }
                 ;
 
-term:           var {  }
-                | number {  }
+term:           var { $$ = $1 }
+                | number { $$ = $1 }
                 | LEFT_PARAN expression RIGHT_PARAN {  }
                 ;
 
-var:            identifier {  }
+var:            identifier { $$ = $1 }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET {  }
                 ;
 
