@@ -36,84 +36,84 @@ void yyerror(const char* s);
 
 
 %%
-prog_start:     functions { printf("prog_start -> functions \n"); }
+prog_start:     functions {  }
 
-functions:      %empty { printf("functions -> epsilon \n"); }
-                | function functions { printf("functions -> function functions \n"); }
+functions:      %empty {  }
+                | function functions {  }
                 ;
 
-function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY { printf("function -> FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY \n"); }
+function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {  }
                 ;
 
-declarations:   %empty { printf("declarations -> epsilon \n"); }
-                | declaration DOT declarations { printf("declarations -> declaration DOT declarations \n"); }
+declarations:   %empty {  }
+                | declaration DOT declarations {  }
                 ;
 
-declaration:    identifier COLON DIGIT { printf("declaration -> identifier COLON DIGIT \n"); }
-                | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number { printf("declaration -> identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number \n"); }
+declaration:    identifier COLON DIGIT {  }
+                | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number {  }
                 | error { yyerror("Incorrect declaration structure"); }
                 ;
 
-identifier:     IDENT { printf("identifier -> IDENT %s \n", $1); }
+identifier:     IDENT { //printf("identifier -> IDENT %s \n", $1); }
                 ;
 
-number:         NUMBER { printf("number -> NUMBER %d \n", $1); }
+number:         NUMBER { //printf("number -> NUMBER %d \n", $1); }
                 ;
 
-statements:     %empty { printf("statements -> epsilon \n"); }
-                | statement statements { printf("statements -> statement statements \n"); }
+statements:     %empty {  }
+                | statement statements {  }
                 ;
 
 
 
-statement:      var ASSIGN expression DOT                           { printf("statement -> var ASSIGN expression DOT\n"); }
-                | IF boolexp LEFT_BRACE statement RIGHT_BRACE else  { printf("statement -> IF boolexp LEFT_BRACE statement RIGHT_BRACE else \n"); }
-                | IF IDENT LEFT_BRACE statement RIGHT_BRACE else    { printf("statement -> IF IDENT LEFT_BRACE statement RIGHT_BRACE else \n"); }
-                | WHILE boolexp LEFT_BRACE statement RIGHT_BRACE    { printf("statement -> WHILE boolexp LEFT_BRACE statement RIGHT_BRACE \n"); }
-                | IF boolexp LEFT_BRACE statements RIGHT_BRACE else { printf("statement -> IF boolexp LEFT_BRACE statements RIGHT_BRACE else \n"); }
-                | IF IDENT LEFT_BRACE statements RIGHT_BRACE else   { printf("statement -> IF IDENT LEFT_BRACE statements RIGHT_BRACE else \n"); }
-                | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE   { printf("statement -> WHILE boolexp LEFT_BRACE statements RIGHT_BRACE \n"); }
-                | READ LEFT_PARAN expression RIGHT_PARAN DOT        { printf("statement -> READ LEFT_PARAN expression RIGHT_PARAN \n"); }
-                | WRITE LEFT_PARAN expression RIGHT_PARAN DOT       { printf("statement -> WRITE LEFT_PARAN expression RIGHT_PARAN \n"); }
-                | RETURN expression DOT                             { printf("RETURN expression DOT\n"); }
-                | CONTINUE DOT                                      { printf("statement -> CONTINUE \n"); }
-                | STOP DOT                                          { printf("statement -> STOP \n"); }
+statement:      var ASSIGN expression DOT                           {  }
+                | IF boolexp LEFT_BRACE statement RIGHT_BRACE else  {  }
+                | IF IDENT LEFT_BRACE statement RIGHT_BRACE else    {  }
+                | WHILE boolexp LEFT_BRACE statement RIGHT_BRACE    {  }
+                | IF boolexp LEFT_BRACE statements RIGHT_BRACE else {  }
+                | IF IDENT LEFT_BRACE statements RIGHT_BRACE else   {  }
+                | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE   {  }
+                | READ LEFT_PARAN expression RIGHT_PARAN DOT        {  }
+                | WRITE LEFT_PARAN expression RIGHT_PARAN DOT       {  }
+                | RETURN expression DOT                             {  }
+                | CONTINUE DOT                                      {  }
+                | STOP DOT                                          {  }
                 ;
 
-else:           %empty { printf("else -> epsilon \n"); }
-                | ELSE LEFT_BRACE statements RIGHT_BRACE { printf("else -> ELSE LEFT_BRACE statements RIGHT_BRACE \n"); }
+else:           %empty {  }
+                | ELSE LEFT_BRACE statements RIGHT_BRACE {  }
                 ;
 
-boolexp:        expression comp expression       { printf("boolexp -> expression comp expression \n"); }
-                | NOT expression comp expression { printf("boolexp -> NOT expression comp expression \n"); }
+boolexp:        expression comp expression       {  }
+                | NOT expression comp expression {  }
                 ;
 
-comp:           EQ     { printf("comp -> EQ \n"); }
-                | LT   { printf("comp -> LT \n"); }
-                | GT   { printf("comp -> GT \n"); }
-                | LTE  { printf("comp -> LTE \n"); }
-                | GTE  { printf("comp -> GTE \n"); }
-                | NEQ  { printf("comp -> NEQ \n"); }
+comp:           EQ     {  }
+                | LT   {  }
+                | GT   {  }
+                | LTE  {  }
+                | GTE  {  }
+                | NEQ  {  }
                 ;
 
-expression:     multexpr                 { printf("expression -> multexpr \n"); }
-                | multexpr ADD multexpr  { printf("expression -> multexpr ADD multexpr \n"); }
-                | multexpr SUB multexpr  { printf("expression -> multexpr SUB multexpr \n"); }
+expression:     multexpr                 {  }
+                | multexpr ADD multexpr  {  }
+                | multexpr SUB multexpr  {  }
                 ;
 
-multexpr:       term             { printf("multexpr -> term \n"); }
-                | term MULT term { printf("multexpr -> term MULT term \n"); }
-                | term DIV term  { printf("multexpr -> term DIV term \n"); }
-                | term MOD term  { printf("multexpr -> term MOD term \n"); }
+multexpr:       term             {  }
+                | term MULT term {  }
+                | term DIV term  {  }
+                | term MOD term  {  }
                 ;
 
-term:           var { printf("term -> var \n"); }
-                | number { printf("term -> number \n"); }
-                | LEFT_PARAN expression RIGHT_PARAN { printf("term -> LEFT_PARAN expression RIGHT_PARAN \n"); }
+term:           var {  }
+                | number {  }
+                | LEFT_PARAN expression RIGHT_PARAN {  }
                 ;
 
-var:            identifier { printf("var -> identifier \n"); }
-                | identifier LEFT_BRACKET expression RIGHT_BRACKET { printf("var -> identifier LEFT_BRACKET expression RIGHT_BRACKET \n"); }
+var:            identifier {  }
+                | identifier LEFT_BRACKET expression RIGHT_BRACKET {  }
                 ;
 
 %%
