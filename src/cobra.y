@@ -207,14 +207,16 @@ statements:     %empty {
 
 
 
-statement:      var ASSIGN expression DOT {
+statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
-                    std::string var = $1;
+                    std::string id = $1;
                     CodeNode *expression = $3;
-                    node->code = "";
-                    // **** We have to make it work with arrays as well
-                    node->code += std::string("= ") + var + std::string(", ") + expression->name;
+                    node->code = expression->code;
+                    node->code += std::string("= ") + id + std::string(", ") + expression->name + std::string("\n");
                     $$ = node;
+                }
+                | identifier LEFT_BRACKET expression RIGHT_BRACKET ASSIGN expression DOT {
+
                 }
                 | IF boolexp LEFT_BRACE statement RIGHT_BRACE else  {  }
                 | IF IDENT LEFT_BRACE statement RIGHT_BRACE else    {  }
@@ -262,7 +264,15 @@ term:           var { $$ = $1 }
                 ;
 
 var:            identifier { $$ = $1 }
-                | identifier LEFT_BRACKET expression RIGHT_BRACKET {  }
+                | identifier LEFT_BRACKET expression RIGHT_BRACKET {
+                    std::string temp = create_temp();
+                    CodeNode *node = new CodeNode;
+                    // Recursion and create temporary variable
+                    node->code = $3->code + decl_temp_code(temp);
+                    // Array assignment: =[] dst, src, index
+                    node->code += std::string("=[] ") + temp + std::string(", ") +
+                    node->name = temp;
+                }
                 ;
 
 %%
