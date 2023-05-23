@@ -1,0 +1,19 @@
+funct main.
+
+params {
+} params
+
+locals {
+  a : digit.
+  b : digit.
+  c : digit.
+} locals
+
+body {
+  a = 100.
+  b = 50.
+
+  // Addition, answer is 150, since 150 = 100+50
+  c = a sum b.
+  shout(c).
+} body
