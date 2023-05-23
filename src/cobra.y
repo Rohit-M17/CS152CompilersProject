@@ -225,18 +225,24 @@ statements:     %empty {
                 }
                 ;
 
-
-
 statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
                     CodeNode *expression = $3;
                     node->code = expression->code;
+                    // Variable assignment: = dst, src
                     node->code += std::string("= ") + id + std::string(", ") + expression->name + std::string("\n");
                     $$ = node;
                 }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET ASSIGN expression DOT {
-
+                    CodeNode *node = new CodeNode;
+                    std::string id = $1;
+                    CodeNode *index = $3;
+                    CodeNode *source = $3;
+                    node->code = index->code + source->code;
+                    // Array assignment: []= dst, index, src
+                    node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + source->name + std::string("\n");
+                    $$ = node;
                 }
                 | IF boolexp LEFT_BRACE statement RIGHT_BRACE else  {  }
                 | IF IDENT LEFT_BRACE statement RIGHT_BRACE else    {  }
@@ -245,7 +251,8 @@ statement:      identifier ASSIGN expression DOT {
                 | IF IDENT LEFT_BRACE statements RIGHT_BRACE else   {  }
                 | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE   {  }
                 | READ LEFT_PARAN expression RIGHT_PARAN DOT        {  }
-                | WRITE LEFT_PARAN expression RIGHT_PARAN DOT       {  }
+                | WRITE LEFT_PARAN expression RIGHT_PARAN DOT       {
+                }
                 | RETURN expression DOT                             {  }
                 | CONTINUE DOT                                      {  }
                 | STOP DOT                                          {  }
