@@ -292,14 +292,34 @@ term:           var { $$ = $1 }
 
 var:            identifier { $$ = $1 }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET {
-                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
+                    std::string id = $1;
+                    CodeNode *index = $3;
                     // Recursion and create temporary variable
                     node->code = $3->code + decl_temp_code(temp);
-                    // Array assignment: =[] dst, src, index
-                    node->code += std::string("=[] ") + temp + std::string(", ") +
+                    // Array access: = =[] dst, src, index
+                    node->code += std::string("=[] ") + temp + std::string(", ") + id  + std::string(", ") + index->name + std::string("\n");
                     node->name = temp;
+
+                    std::string var_name = $1;
+                    std::string error;
+                    if (!find(var_name, Array, error)) {
+                      yyerror(error.c_str());
+                    }
+                    $$ = node;
                 }
+              /*  | identifier {
+                  CodeNode *node = new CodeNode;
+                  node->code = "";
+                  node->name = $1;
+                  std::string error;
+                  if (!find(node->name, Integer, error)) {
+                    yyerror(error.c_str());
+                  }
+                  $$ = node;
+                }
+                */
                 ;
 
 %%
