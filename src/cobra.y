@@ -109,8 +109,13 @@ functions:      %empty {  }
                 | function functions {  }
                 ;
 
-function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
-                std::string func_name = $2;
+function:       FUNCTION function_ident DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
+                printf("endfunc\n"); }
+                ;
+
+function_ident: IDENT {
+                // add the function to the symbol table
+                std::string func_name = $1;
                 add_function_to_symbol_table(func_name);
                 printf("func %s\n", func_name.c_str()); }
                 ;
