@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
+#include <string.h>
 
 extern int yylex();
 extern int yyparse();
