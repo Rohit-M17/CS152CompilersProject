@@ -124,10 +124,10 @@ declaration:    identifier COLON DIGIT {  }
                 | error { yyerror("Incorrect declaration structure"); }
                 ;
 
-identifier:     IDENT { //printf("identifier -> IDENT %s \n", $1); }
+identifier:     IDENT {  }
                 ;
 
-number:         NUMBER { //printf("number -> NUMBER %d \n", $1); }
+number:         NUMBER {  }
                 ;
 
 statements:     %empty {  }
