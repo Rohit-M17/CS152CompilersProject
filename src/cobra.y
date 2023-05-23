@@ -11,6 +11,73 @@ extern int yyparse();
 extern FILE* yyin;
 
 void yyerror(const char* s);
+
+enum Type { Integer, Array };
+
+struct CodeNode {
+    std::string code;
+    std::string name;
+};
+
+struct Symbol {
+    std::string name;
+    Type type;
+};
+
+struct Function {
+    std::string name;
+    std::vector<Symbol> declarations;
+};
+
+std::vector <Function> symbol_table;
+
+// remember that Bison is a bottom up parser: that it parses leaf nodes first before
+// parsing the parent nodes. So control flow begins at the leaf grammar nodes
+// and propagates up to the parents.
+Function *get_function() {
+  int last = symbol_table.size()-1;
+  if (last < 0) {
+    printf("***Error. Attempt to call get_function with an empty symbol table\n");
+    printf("Create a 'Function' object using 'add_function_to_symbol_table' before\n");
+    printf("calling 'find' or 'add_variable_to_symbol_table'");
+    //exit(1);
+  }
+  return &symbol_table[last];
+}
+
+// when you see a function declaration inside the grammar, add
+// the function name to the symbol table
+void add_function_to_symbol_table(std::string &value) {
+  Function f;
+  f.name = value;
+  symbol_table.push_back(f);
+}
+
+// when you see a symbol declaration inside the grammar, add
+// the symbol name as well as some type information to the symbol table
+void add_variable_to_symbol_table(std::string &value, Type t) {
+  Symbol s;
+  s.name = value;
+  s.type = t;
+  Function *f = get_function();
+  f->declarations.push_back(s);
+}
+
+// a function to print out the symbol table to the screen
+// largely for debugging purposes.
+void print_symbol_table(void) {
+  printf("symbol table:\n");
+  printf("--------------------\n");
+  for(int i=0; i<symbol_table.size(); i++) {
+    printf("function: %s\n", symbol_table[i].name.c_str());
+    for(int j=0; j<symbol_table[i].declarations.size(); j++) {
+      printf("  locals: %s\n", symbol_table[i].declarations[j].name.c_str());
+    }
+  }
+  printf("--------------------\n");
+}
+
+
 %}
 
 %union {
@@ -42,7 +109,10 @@ functions:      %empty {  }
                 | function functions {  }
                 ;
 
-function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {  }
+function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
+                std::string func_name = $2;
+                add_function_to_symbol_table(func_name);
+                printf("func %s\n", func_name.c_str()); }
                 ;
 
 declarations:   %empty {  }
@@ -131,6 +201,7 @@ int main(int argc, char *argv[]) {
   }
   yyin = inputFile;
   yyparse();
+  print_symbol_table();
 
   return 0;
 }
