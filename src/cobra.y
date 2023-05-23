@@ -46,6 +46,23 @@ Function *get_function() {
   return &symbol_table[last];
 }
 
+// find a particular variable using the symbol table.
+// grab the most recent function, and linear search to
+// find the symbol you are looking for.
+// you may want to extend "find" to handle different types of "Integer" vs "Array"
+bool find(std::string &value, std::string &t) {
+  Function *f = get_function();
+  for(int i=0; i < f->declarations.size(); i++) {
+    Symbol *s = &f->declarations[i];
+    if (s->name == value) {
+      if (s->type == t) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // when you see a function declaration inside the grammar, add
 // the function name to the symbol table
 void add_function_to_symbol_table(std::string &value) {
@@ -297,14 +314,13 @@ var:            identifier { $$ = $1 }
                     std::string id = $1;
                     CodeNode *index = $3;
                     // Recursion and create temporary variable
-                    node->code = $3->code + decl_temp_code(temp);
+                    node->code = index->code + decl_temp_code(temp);
                     // Array access: = =[] dst, src, index
-                    node->code += std::string("=[] ") + temp + std::string(", ") + id  + std::string(", ") + index->name + std::string("\n");
+                    node->code += std::string("=[] ") + temp + std::string(", ") + id + std::string(", ") + index->name + std::string("\n");
                     node->name = temp;
 
-                    std::string var_name = $1;
                     std::string error;
-                    if (!find(var_name, Array, error)) {
+                    if (!find(id, Array, error)) {
                       yyerror(error.c_str());
                     }
                     $$ = node;
