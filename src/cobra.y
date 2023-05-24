@@ -379,15 +379,70 @@ comp:           EQ     {  }
                 | NEQ  {  }
                 ;
 
-expression:     multexpr                 {  }
-                | multexpr ADD multexpr  {  }
-                | multexpr SUB multexpr  {  }
+expression:     multexpr                 { $$ = $1;}
+                | multexpr ADD multexpr  {
+                    std::string temp = create_temp();
+                    CodeNode *node = new CodeNode;
+                    CodeNode *leftexpr = $1;
+                    CodeNode *rightexpr = $3;
+                    // Recursion and create temporary variable
+                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
+                    // Array access: + dst, src1, src2
+                    node->code += std::string("+ ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
+                    node->name = temp;
+                    $$ = node;
+                 }
+                | multexpr SUB multexpr  {
+                    std::string temp = create_temp();
+                    CodeNode *node = new CodeNode;
+                    CodeNode *leftexpr = $1;
+                    CodeNode *rightexpr = $3;
+                    // Recursion and create temporary variable
+                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
+                    // Array access: - dst, src1, src2
+                    node->code += std::string("- ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
+                    node->name = temp;
+                    $$ = node;
+                  }
                 ;
 
-multexpr:       term             {  }
-                | term MULT term {  }
-                | term DIV term  {  }
-                | term MOD term  {  }
+multexpr:       term             { $$ = $1; }
+                | term MULT term {
+                    std::string temp = create_temp();
+                    CodeNode *node = new CodeNode;
+                    CodeNode *leftexpr = $1;
+                    CodeNode *rightexpr = $3;
+                    // Recursion and create temporary variable
+                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
+                    // Array access: * dst, src1, src2
+                    node->code += std::string("* ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
+                    node->name = temp;
+                    $$ = node;
+                  }
+                | term DIV term  { 
+                    std::string temp = create_temp();
+                    CodeNode *node = new CodeNode;
+                    CodeNode *leftexpr = $1;
+                    CodeNode *rightexpr = $3;
+                    // Recursion and create temporary variable
+                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
+                    // Array access: / dst, src1, src2
+                    node->code += std::string("/ ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
+                    node->name = temp;
+                    $$ = node;
+                 }
+                | term MOD term  { 
+                    std::string temp = create_temp();
+                    CodeNode *node = new CodeNode;
+                    CodeNode *leftexpr = $1;
+                    CodeNode *rightexpr = $3;
+                    // Recursion and create temporary variable
+                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
+                    // Array access: % dst, src1, src2
+                    node->code += std::string("% ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
+                    node->name = temp;
+                    $$ = node;
+                 }
                 ;
 
 term:           var {
