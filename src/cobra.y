@@ -184,6 +184,7 @@ functions:      %empty {
 function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
                     CodeNode *node = new CodeNode;
                     std::string func_name = $2;
+                    // ****** We have add a check so that the function name is not a reserved word like mult or sum *****
                     add_function_to_symbol_table(func_name);
                     node->code = "";
                     // Add function name
@@ -275,6 +276,19 @@ statement:      identifier ASSIGN expression DOT {
                     }
                     $$ = node;
                 }
+                identifier ASSIGN function_call DOT {
+                    CodeNode *node = new CodeNode;
+                    std::string id = $1;
+                    CodeNode *expression = $3;
+                    node->code = expression->code;
+                    // Variable assignment: = dst, src
+                    node->code += std::string("= ") + id + std::string(", ") + expression->name + std::string("\n");
+                    std::string error;
+                    if (!find(id, Integer, error)){
+                        yyerror(error.c_str());
+                    }
+                    $$ = node;
+                }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
@@ -285,17 +299,17 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + source->name + std::string("\n");
                     $$ = node;
                 }
-                | IF boolexp LEFT_BRACE statement RIGHT_BRACE else  {
+                | IF boolexp LEFT_BRACE statement RIGHT_BRACE else {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | IF IDENT LEFT_BRACE statement RIGHT_BRACE else    {
+                | IF IDENT LEFT_BRACE statement RIGHT_BRACE else {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | WHILE boolexp LEFT_BRACE statement RIGHT_BRACE    {
+                | WHILE boolexp LEFT_BRACE statement RIGHT_BRACE {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
@@ -305,24 +319,25 @@ statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | IF IDENT LEFT_BRACE statements RIGHT_BRACE else   {
+                | IF IDENT LEFT_BRACE statements RIGHT_BRACE else {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE   {
+                | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | READ LEFT_PARAN expression RIGHT_PARAN DOT        {
+                | READ LEFT_PARAN var RIGHT_PARAN DOT {
+                    // reads from std_input and writes it into a variable
                     CodeNode *node = new CodeNode;
-                    CodeNode var = $0;
+                    CodeNode *dest = $3;
                     // Output statement: .< dst
-                    node->code += std::string(".<") + var + std::string("\n");
+                    node->code += std::string(".< ") + dest->name + std::string("\n");
                     $$ = node;
                 }
-                | WRITE LEFT_PARAN expression RIGHT_PARAN DOT       {
+                | WRITE LEFT_PARAN expression RIGHT_PARAN DOT {
                     CodeNode *node = new CodeNode;
                     CodeNode *expression = $3;
                     // Output statement: .> src
@@ -330,17 +345,17 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += std::string(".> ") + expression->name + std::string("\n");
                     $$ = node;
                 }
-                | RETURN expression DOT                             {
+                | RETURN expression DOT {
                     // PROVISIONAL, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | CONTINUE DOT                                      {
+                | CONTINUE DOT {
                     // PROVISIONAL, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | STOP DOT                                          {
+                | STOP DOT {
                     // PROVISIONAL, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
@@ -348,7 +363,6 @@ statement:      identifier ASSIGN expression DOT {
                 ;
 
 else:           %empty {
-                    // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
@@ -357,6 +371,19 @@ else:           %empty {
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
+                ;
+
+function_call:  identifier LEFT_PARAN arguments RIGHT_PARAN {
+
+                }
+                ;
+
+arguments:      %empty {
+                    CodeNode *node = new CodeNode;
+                    $$ = node;
+                }
+                | expression { }
+                | arguments { }
                 ;
 
 boolexp:        expression comp expression {
@@ -379,70 +406,70 @@ comp:           EQ     {  }
                 | NEQ  {  }
                 ;
 
-expression:     multexpr                 { $$ = $1;}
-                | multexpr ADD multexpr  {
+expression:     multexpr { $$ = $1; }
+                | multexpr ADD multexpr {
                     std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
-                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
-                    // Array access: + dst, src1, src2
+                    node->code = leftexpr->code + rightexpr->code + decl_temp_code(temp);
+                    // Add expression: + dst, src1, src2
                     node->code += std::string("+ ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
                     node->name = temp;
                     $$ = node;
-                 }
-                | multexpr SUB multexpr  {
+                }
+                | multexpr SUB multexpr {
                     std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
-                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
-                    // Array access: - dst, src1, src2
+                    node->code = leftexpr->code + rightexpr->code + decl_temp_code(temp);
+                    // Subtract expression: - dst, src1, src2
                     node->code += std::string("- ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
                     node->name = temp;
                     $$ = node;
-                  }
+                }
                 ;
 
-multexpr:       term             { $$ = $1; }
+multexpr:       term { $$ = $1; }
                 | term MULT term {
                     std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
-                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
-                    // Array access: * dst, src1, src2
+                    node->code = leftexpr->code + rightexpr->code + decl_temp_code(temp);
+                    // Multiply expression: * dst, src1, src2
                     node->code += std::string("* ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
                     node->name = temp;
                     $$ = node;
                   }
-                | term DIV term  { 
+                | term DIV term {
                     std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
-                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
-                    // Array access: / dst, src1, src2
+                    node->code = leftexpr->code + rightexpr->code + decl_temp_code(temp);
+                    // Divide expression: / dst, src1, src2
                     node->code += std::string("/ ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
                     node->name = temp;
                     $$ = node;
-                 }
-                | term MOD term  { 
+                }
+                | term MOD term {
                     std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
-                    node->code = leftexpr->code  + rightexpr->code + decl_temp_code(temp);
-                    // Array access: % dst, src1, src2
+                    node->code = leftexpr->code + rightexpr->code + decl_temp_code(temp);
+                    // Mod expression: % dst, src1, src2
                     node->code += std::string("% ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
                     node->name = temp;
                     $$ = node;
-                 }
+                }
                 ;
 
 term:           var {
