@@ -316,8 +316,10 @@ statement:      identifier ASSIGN expression DOT {
                     $$ = node;
                 }
                 | READ LEFT_PARAN expression RIGHT_PARAN DOT        {
-                    // PROVISIONAL, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
+                    CodeNode var = $0;
+                    // Output statement: .< dst
+                    node->code += std::string(".<") + var + std::string("\n");
                     $$ = node;
                 }
                 | WRITE LEFT_PARAN expression RIGHT_PARAN DOT       {
@@ -391,7 +393,7 @@ multexpr:       term             {  }
 term:           var {
                     CodeNode *node = new CodeNode;
                     CodeNode *var = $1;
-                    node->code = var->code
+                    node->code = var->code;
                     node->name = var->name;
                     $$ = node;
                 }
@@ -429,7 +431,7 @@ var:            identifier {
                     CodeNode *index = $3;
                     // Recursion and create temporary variable
                     node->code = index->code + decl_temp_code(temp);
-                    // Array access: = =[] dst, src, index
+                    // Array access: =[] dst, src, index
                     node->code += std::string("=[] ") + temp + std::string(", ") + id + std::string(", ") + index->name + std::string("\n");
                     node->name = temp;
 
