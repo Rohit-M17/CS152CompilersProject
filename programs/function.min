@@ -9,20 +9,20 @@ locals {
 } locals
 
 body {
-        return a sum b.
+    return a sum b.
 } body
 
 
 funct multiplicate.
 params {
-  a : digit.
-  b : digit.
+    a : digit.
+    b : digit.
 } params
 
 locals {
 } locals
 body {
-  return a mult b.
+    return a mult b.
 } body
 
 
@@ -41,9 +41,9 @@ locals {
 body {
   a = 100.
   b = 50.
-  c = a sum b.
+  c = add(a, b).
   shout(c).        // should print 150
 
-  d = (c mult (a sum b)).
+  d = multiplicate(c, a + b).
   shout(d).        // should print "22500", since 22500 = 150 * 150;
 } body

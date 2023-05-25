@@ -49,6 +49,18 @@ Function *get_function() {
     return &symbol_table[last];
 }
 
+// Function to generate the code that gets the function parameters
+std::string get_function_parameters() {
+    std::string parameters_code = "";
+    Function *f = get_function();
+    for(int i=0; i < f->declarations.size(); i++) {
+        Symbol *param = &f->declarations[i];                // Loop through the vector of declarations of the function
+        // Get the function parameter value: = dst, $0
+        parameters_code += std::string("= ") + param->name + std::string(", $") + std::to_string(i) + std::string("\n");
+    }
+    return parameters_code;
+}
+
 // Function to find a particular variable using the symbol table,
 // grab the most recent function, and linear search to find the symbol you are looking for.
 bool find(std::string &value, Type t, std::string &error) {
@@ -123,6 +135,16 @@ std::string decl_temp_code(std::string &temp) {
     return std::string(". ") + temp + std::string("\n");
 }
 
+// Function to check if a function has been defined
+bool is_function_defined(const std::string &functionName) {
+    for (const auto &function : symbol_table) {
+        if (function.name == functionName) {
+            return true;
+        }
+    }
+    return false;
+}
+
 %}
 
 
@@ -155,6 +177,12 @@ std::string decl_temp_code(std::string &temp) {
 %type   <code_node>     declaration
 %type   <code_node>     statements
 %type   <code_node>     statement
+%type   <code_node>     else
+%type   <code_node>     function_call
+%type   <code_node>     arguments
+%type   <code_node>     boolexp
+%type   <code_node>     expression
+%type   <code_node>     multexpr
 %type   <code_node>     term
 %type   <code_node>     var
 
@@ -192,6 +220,8 @@ function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEG
                     // Add param declarations
                     CodeNode *params = $5;
                     node->code += params->code;
+                    // Generate the code to get the function parameters
+                    node->code += get_function_parameters();
                     // Add local declarations
                     CodeNode *locals = $8;
                     node->code += locals->code;
@@ -271,7 +301,7 @@ statement:      identifier ASSIGN expression DOT {
                     // Variable assignment: = dst, src
                     node->code += std::string("= ") + id + std::string(", ") + expression->name + std::string("\n");
                     std::string error;
-                    if (!find(id, Integer, error)){
+                    if (!find(id, Integer, error)) {
                         yyerror(error.c_str());
                     }
                     $$ = node;
@@ -279,12 +309,12 @@ statement:      identifier ASSIGN expression DOT {
                 identifier ASSIGN function_call DOT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
-                    CodeNode *expression = $3;
-                    node->code = expression->code;
+                    CodeNode *call = $3;
+                    node->code = call->code;
                     // Variable assignment: = dst, src
-                    node->code += std::string("= ") + id + std::string(", ") + expression->name + std::string("\n");
+                    node->code += std::string("= ") + id + std::string(", ") + call->name + std::string("\n");
                     std::string error;
-                    if (!find(id, Integer, error)){
+                    if (!find(id, Integer, error)) {
                         yyerror(error.c_str());
                     }
                     $$ = node;
@@ -293,10 +323,20 @@ statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
                     CodeNode *index = $3;
-                    CodeNode *source = $3;
+                    CodeNode *source = $6;
                     node->code = index->code + source->code;
                     // Array assignment: []= dst, index, src
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + source->name + std::string("\n");
+                    $$ = node;
+                }
+                | identifier LEFT_BRACKET expression RIGHT_BRACKET ASSIGN function_call DOT {
+                    CodeNode *node = new CodeNode;
+                    std::string id = $1;
+                    CodeNode *index = $3;
+                    CodeNode *call = $6;
+                    node->code = index->code + call->code;
+                    // Array assignment: []= dst, index, src
+                    node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + call->name + std::string("\n");
                     $$ = node;
                 }
                 | IF boolexp LEFT_BRACE statement RIGHT_BRACE else {
@@ -341,22 +381,22 @@ statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     CodeNode *expression = $3;
                     // Output statement: .> src
-                    node->code = "";
+                    node->code = expression->code;
                     node->code += std::string(".> ") + expression->name + std::string("\n");
                     $$ = node;
                 }
                 | RETURN expression DOT {
-                    // PROVISIONAL, just for testing, needs to be changed
+                    // *** PROVISIONAL, just for testing, needs to be changed ***
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
                 | CONTINUE DOT {
-                    // PROVISIONAL, just for testing, needs to be changed
+                    // **+ PROVISIONAL, just for testing, needs to be changed ***
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
                 | STOP DOT {
-                    // PROVISIONAL, just for testing, needs to be changed
+                    // *** PROVISIONAL, just for testing, needs to be changed ***
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
@@ -374,7 +414,20 @@ else:           %empty {
                 ;
 
 function_call:  identifier LEFT_PARAN arguments RIGHT_PARAN {
+                    CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
+                    std::string funct_name = $1;
+                    CodeNode *arguments = $3;
+                    // Recursion and create temporary variable
+                    node->code = arguments->code + decl_temp_code(temp);
+                    // Function call: call name, dest
+                    node->code += std::string("call ") + funct_name + std::string(", ") + temp + std::string("\n");
+                    node->name = temp;
 
+                    if (!is_function_defined(funct_name)) {
+                        yyerror("Undefined function " + funct_name);
+                    }
+                    $$ = node;
                 }
                 ;
 
@@ -382,8 +435,20 @@ arguments:      %empty {
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
-                | expression { }
-                | arguments { }
+                | expression {
+                    $$ = $1;
+                }
+                | arguments COMMA expression {
+                    CodeNode *node = new CodeNode;
+                    CodeNode *arg1 = $1;
+                    CodeNode *arg2 = $3;
+                    // Add parameters to the queue of parameters for the next function call
+                    node->code = arg1->code;
+                    node->code += std::string("param ") + arg1->name + std::string("\n");
+                    node->code += arg2->code;
+                    node->code += std::string("param ") + arg2->name + std::string("\n");
+                    $$ = node;
+                }
                 ;
 
 boolexp:        expression comp expression {
@@ -408,8 +473,8 @@ comp:           EQ     {  }
 
 expression:     multexpr { $$ = $1; }
                 | multexpr ADD multexpr {
-                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
@@ -420,8 +485,8 @@ expression:     multexpr { $$ = $1; }
                     $$ = node;
                 }
                 | multexpr SUB multexpr {
-                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
@@ -435,8 +500,8 @@ expression:     multexpr { $$ = $1; }
 
 multexpr:       term { $$ = $1; }
                 | term MULT term {
-                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
@@ -447,8 +512,8 @@ multexpr:       term { $$ = $1; }
                     $$ = node;
                   }
                 | term DIV term {
-                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
@@ -459,8 +524,8 @@ multexpr:       term { $$ = $1; }
                     $$ = node;
                 }
                 | term MOD term {
-                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
                     CodeNode *leftexpr = $1;
                     CodeNode *rightexpr = $3;
                     // Recursion and create temporary variable
@@ -519,7 +584,7 @@ var:            identifier {
 
                     std::string error;
                     if (!find(id, Array, error)) {
-                      yyerror(error.c_str());
+                        yyerror(error.c_str());
                     }
                     $$ = node;
                 }
