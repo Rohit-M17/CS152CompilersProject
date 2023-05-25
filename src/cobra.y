@@ -126,7 +126,9 @@ bool has_main() {
 // Function to create a temporary variable (register)
 std::string create_temp() {
     static int num = 0;
-    std::string value = "_temp" + std::to_string(num);
+    std::stringstream ss;
+    ss << num;
+    std::string value = "_temp" + ss.str();
     num += 1;
     return value;
 }
@@ -266,7 +268,10 @@ declaration:    identifier COLON DIGIT {
                 | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
-                    std::string size = $8;
+                    //std::string size = $8;
+                    std::stringstream ss;
+                    ss << $8;
+                    std::string size = ss.str();
                     add_variable_to_symbol_table(id, Array);
                     // Array declaration: .[] name, n
                     node->code = std::string(".[] ") + id + std::string(", ") + size + std::string("\n");
