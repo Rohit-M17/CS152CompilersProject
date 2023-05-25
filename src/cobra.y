@@ -178,6 +178,7 @@ bool is_function_defined(const std::string &functionName) {
 
 %type   <code_node>     functions
 %type   <code_node>     function
+%type   <code_node>     parameters
 %type   <code_node>     declarations
 %type   <code_node>     declaration
 %type   <code_node>     statements
@@ -215,7 +216,7 @@ functions:      %empty {
                 }
                 ;
 
-function:       FUNCTION function_ident DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
+function:       FUNCTION function_ident DOT BEGIN_PARAMS parameters END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
                     CodeNode *node = new CodeNode;
                     std::string func_name = $2;
                     // ****** We have add a check so that the function name is not a reserved word like mult or sum *****
@@ -227,7 +228,7 @@ function:       FUNCTION function_ident DOT BEGIN_PARAMS declarations END_PARAMS
                     CodeNode *params = $5;
                     node->code += params->code;
                     // Generate the code to get the function parameters
-                    node->code += get_function_parameters();
+                    //node->code += get_function_parameters();
                     // Add local declarations
                     CodeNode *locals = $8;
                     node->code += locals->code;
@@ -246,6 +247,15 @@ function_ident: IDENT {
                     $$ = $1;
                 }
                 ;
+
+parameters:     declarations {
+                    CodeNode *node = new CodeNode;
+                    CodeNode *declarations = $1;
+                    node->code = declarations->code;
+                    // Generate the code to get the function parameters
+                    node->code += get_function_parameters();
+                    $$ = node;
+                }
 
 declarations:   %empty {
                     CodeNode *node = new CodeNode;
