@@ -44,6 +44,6 @@ body {
   c = add(a, b).
   shout(c).        // should print 150
 
-  d = multiplicate(c, a + b).
+  d = multiplicate(c, a sum b).
   shout(d).        // should print "22500", since 22500 = 150 * 150;
 } body

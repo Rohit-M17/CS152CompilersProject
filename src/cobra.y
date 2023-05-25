@@ -273,6 +273,8 @@ declarations:   %empty {
 declaration:    identifier COLON DIGIT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
+                    // **** implement error catch, check if variable is already declared ****
+                    // **** implement error catch, check that the variable name is not a reserved keyword ****
                     add_variable_to_symbol_table(id, Integer);
                     // Variable declaration: . name
                     node->code = std::string(". ") + id + std::string("\n");
@@ -285,6 +287,8 @@ declaration:    identifier COLON DIGIT {
                     std::stringstream ss;
                     ss << $8;
                     std::string size = ss.str();
+                    // **** implement error catch, check if variable is already declared ****
+                    // **** implement error catch, check that the variable name is not a reserved keyword ****
                     add_variable_to_symbol_table(id, Array);
                     // Array declaration: .[] name, n
                     node->code = std::string(".[] ") + id + std::string(", ") + size + std::string("\n");
@@ -346,6 +350,10 @@ statement:      identifier ASSIGN expression DOT {
                     node->code = index->code + source->code;
                     // Array assignment: []= dst, index, src
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + source->name + std::string("\n");
+                    std::string error;
+                    if (!find(id, Array, error)) {
+                        yyerror(error.c_str());
+                    }
                     $$ = node;
                 }
                 | identifier LEFT_BRACKET expression RIGHT_BRACKET ASSIGN function_call DOT {
@@ -356,6 +364,10 @@ statement:      identifier ASSIGN expression DOT {
                     node->code = index->code + call->code;
                     // Array assignment: []= dst, index, src
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + call->name + std::string("\n");
+                    std::string error;
+                    if (!find(id, Array, error)) {
+                        yyerror(error.c_str());
+                    }
                     $$ = node;
                 }
                 | IF boolexp LEFT_BRACE statement RIGHT_BRACE else {
