@@ -56,8 +56,10 @@ std::string get_function_parameters() {
     Function *f = get_function();
     for(int i=0; i < f->declarations.size(); i++) {
         Symbol *param = &f->declarations[i];                // Loop through the vector of declarations of the function
+        std::stringstream ss;
+        ss << i;
         // Get the function parameter value: = dst, $0
-        parameters_code += std::string("= ") + param->name + std::string(", $") + std::to_string(i) + std::string("\n");
+        parameters_code += std::string("= ") + param->name + std::string(", $") + ss.str() + std::string("\n");
     }
     return parameters_code;
 }
@@ -154,7 +156,8 @@ bool is_function_defined(const std::string &functionName) {
 %union {
     int     number_val;
     char*   ident_val;
-    struct  CodeNode *node;
+    //struct  CodeNode *node;
+    struct  CodeNode *code_node;
 }
 
 
@@ -195,8 +198,8 @@ bool is_function_defined(const std::string &functionName) {
 
 %%
 prog_start:     functions {
-                    CodeNode *code_node = $1;
-                    printf("%s\n", code_node->code.c_str());
+                    CodeNode *node = $1;
+                    printf("%s\n", node->code.c_str());
                 }
 
 functions:      %empty {
@@ -431,7 +434,7 @@ function_call:  identifier LEFT_PARAN arguments RIGHT_PARAN {
                     node->name = temp;
 
                     if (!is_function_defined(funct_name)) {
-                        yyerror(("Undefined function " + funct_name)c._str());
+                        yyerror(("Undefined function " + funct_name)c_str());
                     }
                     $$ = node;
                 }
