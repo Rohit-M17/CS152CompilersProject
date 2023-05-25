@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <string.h>
+#include <sstream>
 
 extern int yylex();
 extern int yyparse();
@@ -137,8 +138,8 @@ std::string decl_temp_code(std::string &temp) {
 
 // Function to check if a function has been defined
 bool is_function_defined(const std::string &functionName) {
-    for (const auto &function : symbol_table) {
-        if (function.name == functionName) {
+    for (int i=0; i<symbol_table.size(); i++) {
+        if (symbol_table[i].name.c_str() == functionName) {
             return true;
         }
     }
@@ -306,7 +307,7 @@ statement:      identifier ASSIGN expression DOT {
                     }
                     $$ = node;
                 }
-                identifier ASSIGN function_call DOT {
+                | identifier ASSIGN function_call DOT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
                     CodeNode *call = $3;
@@ -425,7 +426,7 @@ function_call:  identifier LEFT_PARAN arguments RIGHT_PARAN {
                     node->name = temp;
 
                     if (!is_function_defined(funct_name)) {
-                        yyerror("Undefined function " + funct_name);
+                        yyerror(("Undefined function " + funct_name)c._str());
                     }
                     $$ = node;
                 }
@@ -546,7 +547,10 @@ term:           var {
                 }
                 | number {
                     CodeNode *node = new CodeNode;
-                    std::string num = $1;
+                    //std::string num = $1;
+                    std::stringstream ss;
+                    ss << $1;
+                    std::string num = ss.str();
                     node->code = "";
                     node->name = num;
                     $$ = node;
