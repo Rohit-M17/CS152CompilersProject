@@ -156,7 +156,6 @@ bool is_function_defined(const std::string &functionName) {
 %union {
     int     number_val;
     char*   ident_val;
-    //struct  CodeNode *node;
     struct  CodeNode *code_node;
 }
 
@@ -193,6 +192,7 @@ bool is_function_defined(const std::string &functionName) {
 %type   <code_node>     var
 
 %type   <ident_val>     identifier
+%type   <ident_val>     function_ident
 %type   <number_val>    number
 
 
@@ -215,11 +215,11 @@ functions:      %empty {
                 }
                 ;
 
-function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
+function:       FUNCTION function_ident DOT BEGIN_PARAMS declarations END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
                     CodeNode *node = new CodeNode;
                     std::string func_name = $2;
                     // ****** We have add a check so that the function name is not a reserved word like mult or sum *****
-                    add_function_to_symbol_table(func_name);
+                    //add_function_to_symbol_table(func_name);
                     node->code = "";
                     // Add function name
                     node->code += std::string("func ") + func_name + std::string("\n");
@@ -239,22 +239,22 @@ function:       FUNCTION identifier DOT BEGIN_PARAMS declarations END_PARAMS BEG
                 }
                 ;
 
-/* function_ident: IDENT {
-                    // add the function to the symbol table
+function_ident: IDENT {
+                    // Add the function to the symbol table
                     std::string func_name = $1;
                     add_function_to_symbol_table(func_name);
-                    printf("func %s\n", func_name.c_str());
+                    $$ = $1;
                 }
-                ; */
+                ;
 
 declarations:   %empty {
                     CodeNode *node = new CodeNode;
                     $$ = node;
                 }
                 | declaration DOT declarations {
+                    CodeNode *node = new CodeNode;
                     CodeNode *declaration = $1;
                     CodeNode *declarations = $3;
-                    CodeNode *node = new CodeNode;
                     node->code = declaration->code + declarations->code;
                     $$ = node;
                 }
@@ -434,7 +434,7 @@ function_call:  identifier LEFT_PARAN arguments RIGHT_PARAN {
                     node->name = temp;
 
                     if (!is_function_defined(funct_name)) {
-                        yyerror(("Undefined function " + funct_name)c_str());
+                        yyerror(("Undefined function " + funct_name).c_str());
                     }
                     $$ = node;
                 }
