@@ -15,6 +15,7 @@ extern int yyparse();
 extern FILE* yyin;
 
 void yyerror(const char* s);
+void yyerror_semantic(const char* msg);
 
 
 enum Type { Integer, Array };
@@ -325,7 +326,7 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += std::string("= ") + id + std::string(", ") + expression->name + std::string("\n");
                     std::string error;
                     if (!find(id, Integer, error)) {
-                        yyerror(error.c_str());
+                        yyerror_semantic(error.c_str());
                     }
                     $$ = node;
                 }
@@ -338,7 +339,7 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += std::string("= ") + id + std::string(", ") + call->name + std::string("\n");
                     std::string error;
                     if (!find(id, Integer, error)) {
-                        yyerror(error.c_str());
+                        yyerror_semantic(error.c_str());
                     }
                     $$ = node;
                 }
@@ -352,7 +353,7 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + source->name + std::string("\n");
                     std::string error;
                     if (!find(id, Array, error)) {
-                        yyerror(error.c_str());
+                        yyerror_semantic(error.c_str());
                     }
                     $$ = node;
                 }
@@ -366,7 +367,7 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + call->name + std::string("\n");
                     std::string error;
                     if (!find(id, Array, error)) {
-                        yyerror(error.c_str());
+                        yyerror_semantic(error.c_str());
                     }
                     $$ = node;
                 }
@@ -456,7 +457,7 @@ function_call:  identifier LEFT_PARAN arguments RIGHT_PARAN {
                     node->name = temp;
 
                     if (!is_function_defined(funct_name)) {
-                        yyerror(("Undefined function " + funct_name).c_str());
+                        yyerror_semantic(("Undefined function " + funct_name).c_str());
                     }
                     $$ = node;
                 }
@@ -601,7 +602,7 @@ var:            identifier {
                     node->name = id;
                     std::string error;
                     if (!find(id, Integer, error)) {
-                        yyerror(error.c_str());
+                        yyerror_semantic(error.c_str());
                     }
                     $$ = node;
                 }
@@ -618,7 +619,7 @@ var:            identifier {
 
                     std::string error;
                     if (!find(id, Array, error)) {
-                        yyerror(error.c_str());
+                        yyerror_semantic(error.c_str());
                     }
                     $$ = node;
                 }
@@ -648,5 +649,12 @@ void yyerror(const char* s) {
     extern int yylineno;
     extern char *yytext;
     fprintf(stderr, "ERROR: (syntax error) %s on line %d, at token: %s \n", s, yylineno, yytext);
+    exit(1);
+}
+
+void yyerror_semantic(const char* msg) {
+    extern int yylineno;
+    extern char *yytext;
+    fprintf(stderr, "ERROR: (semantic error) %s on line %d, at token: %s \n", msg, yylineno, yytext);
     exit(1);
 }
