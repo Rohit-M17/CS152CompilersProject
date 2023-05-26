@@ -95,6 +95,13 @@ void add_function_to_symbol_table(std::string &value) {
 
 // Function to add a symbol name and type information to the symbol table
 void add_variable_to_symbol_table(std::string &value, Type t) {
+    Function *foo = get_function();
+    for (int i = 0; i < foo->declarations.size(); i++) {
+        Symbol *s = &foo->declarations[i];
+        if (s->name == value) {
+            yyerror_semantic("Variable is already defined.\n");
+        }
+    }
     Symbol s;
     s.name = value;
     s.type = t;
