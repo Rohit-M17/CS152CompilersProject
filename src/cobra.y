@@ -418,8 +418,11 @@ statement:      identifier ASSIGN expression DOT {
                     $$ = node;
                 }
                 | RETURN expression DOT {
-                    // *** PROVISIONAL, just for testing, needs to be changed ***
                     CodeNode *node = new CodeNode;
+                    CodeNode *expression = $2;
+                    // Output statement: ret src
+                    node->code = expression->code;
+                    node->code += std::string("ret ") + expression->name + std::string("\n");
                     $$ = node;
                 }
                 | CONTINUE DOT {
