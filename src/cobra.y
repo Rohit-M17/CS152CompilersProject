@@ -436,13 +436,13 @@ statement:      identifier ASSIGN expression DOT {
                     $$ = node;
                 }
                 | CONTINUE DOT {
-                    // **+ PROVISIONAL, just for testing, needs to be changed ***
                     CodeNode *node = new CodeNode;
+                    node->code = std::string("continue\n");
                     $$ = node;
                 }
                 | STOP DOT {
-                    // *** PROVISIONAL, just for testing, needs to be changed ***
                     CodeNode *node = new CodeNode;
+                    node->code = std::string("stop\n");
                     $$ = node;
                 }
                 ;
