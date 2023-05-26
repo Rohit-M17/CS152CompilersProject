@@ -201,6 +201,9 @@ bool is_function_defined(const std::string &functionName) {
 %%
 prog_start:     functions {
                     CodeNode *node = $1;
+                     if (!has_main()) {
+                        yyerror_semantic("Main function not defined.");
+                    }
                     printf("%s\n", node->code.c_str());
                 }
 
