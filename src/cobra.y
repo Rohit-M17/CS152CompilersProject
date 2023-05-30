@@ -79,7 +79,11 @@ bool find(std::string &value, Type t, std::string &error) {
                 return true;
             }
             else {
-                error = "Incorrect identifier type usage";
+                if (t == Integer) {
+                    error = "Used array variable " + value + " is missing a specified index";
+                } else {
+                    error = "Specifying an index for the integer variable " + value + " which is not an array";
+                }
                 return false;
             }
         }
