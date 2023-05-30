@@ -1,4 +1,4 @@
-funct main.
+funct notmain.
 
 params {
 } params
@@ -13,5 +13,6 @@ body {
     read(n).
     n = z sum 1.                // used variable "z" was not previously declared
     n = n sum r.                // used array variable "r" is missing a specified index
-    shout(n).
+    n = multiplicate().         // calling a function which has not been defined
+    shout(n[1]).                // specifying an array index when using a regular integer variable
 } body

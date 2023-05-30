@@ -80,6 +80,7 @@ bool find(std::string &value, Type t, std::string &error) {
             }
             else {
                 error = "Incorrect identifier type usage";
+                return false;
             }
         }
         else {
@@ -101,8 +102,9 @@ void add_variable_to_symbol_table(std::string &value, Type t) {
     Function *foo = get_function();
     for (int i = 0; i < foo->declarations.size(); i++) {
         Symbol *s = &foo->declarations[i];
+        // Check if the variable is already declared
         if (s->name == value) {
-            yyerror_semantic(("Variable " + value + " is already defined").c_str());
+            yyerror_semantic(("Variable " + value + " is multiply-defined").c_str());
         }
     }
     Symbol s;
@@ -238,7 +240,7 @@ functions:      %empty {
 function:       FUNCTION function_ident DOT BEGIN_PARAMS parameters END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
                     CodeNode *node = new CodeNode;
                     std::string func_name = $2;
-                    // ****** We have add a check so that the function name is not a reserved word like mult or sum *****
+                    // **** We have add a check so that the function name is not a reserved word like mult or sum ****
                     //add_function_to_symbol_table(func_name);
                     node->code = "";
                     // Add function name
@@ -292,7 +294,6 @@ declarations:   %empty {
 declaration:    identifier COLON DIGIT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
-                    // **** implement error catch, check if variable is already declared ****
                     // **** implement error catch, check that the variable name is not a reserved keyword ****
                     add_variable_to_symbol_table(id, Integer);
                     // Variable declaration: . name
@@ -306,7 +307,6 @@ declaration:    identifier COLON DIGIT {
                     std::stringstream ss;
                     ss << $8;
                     std::string size = ss.str();
-                    // **** implement error catch, check if variable is already declared ****
                     // **** implement error catch, check that the variable name is not a reserved keyword ****
                     add_variable_to_symbol_table(id, Array);
                     // Array declaration: .[] name, n
