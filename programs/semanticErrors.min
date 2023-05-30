@@ -1,0 +1,17 @@
+funct main.
+
+params {
+} params
+
+locals {
+    n : digit.
+    r : digit arr[] size 10.
+    n : digit arr[] size 10.    // symbol "n" is multiply-defined
+} locals
+
+body {
+    read(n).
+    n = z sum 1.                // used variable "z" was not previously declared
+    n = n sum r.                // used array variable "r" is missing a specified index
+    shout(n).
+} body
