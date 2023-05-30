@@ -9,10 +9,13 @@
 #include <vector>
 #include <string.h>
 #include <sstream>
+#include <stdbool.h>
 
 extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
+
+bool inputFileHasErrors = false;
 
 void yyerror(const char* s);
 void yyerror_semantic(const char* msg);
@@ -99,7 +102,7 @@ void add_variable_to_symbol_table(std::string &value, Type t) {
     for (int i = 0; i < foo->declarations.size(); i++) {
         Symbol *s = &foo->declarations[i];
         if (s->name == value) {
-            yyerror_semantic("Variable is already defined.\n");
+            yyerror_semantic(("Variable " + value + " is already defined").c_str());
         }
     }
     Symbol s;
@@ -208,10 +211,15 @@ bool is_function_defined(const std::string &functionName) {
 %%
 prog_start:     functions {
                     CodeNode *node = $1;
-                     if (!has_main()) {
-                        yyerror_semantic("Main function not defined.");
+                    if (!has_main()) {
+                        yyerror_semantic("Main function not defined");
                     }
-                    printf("%s\n", node->code.c_str());
+                    if (inputFileHasErrors == false) {
+                        printf("%s\n", node->code.c_str());
+                    } else {
+                        exit(1);
+                    }
+
                 }
 
 functions:      %empty {
@@ -669,5 +677,5 @@ void yyerror_semantic(const char* msg) {
     extern int yylineno;
     extern char *yytext;
     fprintf(stderr, "ERROR: (semantic error) %s on line %d, at token: %s \n", msg, yylineno, yytext);
-    exit(1);
+    inputFileHasErrors = true;
 }
