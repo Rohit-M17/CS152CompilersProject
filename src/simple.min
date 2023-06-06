@@ -13,10 +13,13 @@ body {
   a = 100.
   b = 50.
 
-  // Addition, answer is 150, since 150 = 100+50
-  c = a sum b.
+  such a lessthan b {
+      c = b.
+    }
+    next {
+      c = a.
+    }
 
-  such c greaterorequal 100 {
-      shout(c).
-  }
+    shout(c).  // This should print out 100
+
 } body

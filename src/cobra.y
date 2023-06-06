@@ -291,8 +291,6 @@ function:       FUNCTION function_ident DOT BEGIN_PARAMS parameters END_PARAMS B
                     // Add param declarations
                     CodeNode *params = $5;
                     node->code += params->code;
-                    // Generate the code to get the function parameters
-                    //node->code += get_function_parameters();
                     // Add local declarations
                     CodeNode *locals = $8;
                     node->code += locals->code;
@@ -345,7 +343,6 @@ declaration:    identifier COLON DIGIT {
                 | identifier COLON DIGIT ARRAY LEFT_BRACKET RIGHT_BRACKET SIZE number {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
-                    //std::string size = $8;
                     std::stringstream ss;
                     ss << $8;
                     std::string size = ss.str();
@@ -375,7 +372,16 @@ statements:     %empty {
                     $$ = node;
                 }
                 ;
-
+/*
+if_statements:  statement statements {
+                    CodeNode *statement = $1;
+                    CodeNode *statements = $2;
+                    CodeNode *node = new CodeNode;
+                    node->code = statement->code + statements->code;
+                    $$ = node;
+                }
+                ;
+*/
 statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
@@ -430,7 +436,7 @@ statement:      identifier ASSIGN expression DOT {
                     }
                     $$ = node;
                 }
-                | IF boolexp LEFT_BRACE statement RIGHT_BRACE else {
+                | IF boolexp LEFT_BRACE statements RIGHT_BRACE else {
                     CodeNode *node = new CodeNode;
                     std::string if_true_label = create_if_label();
                     std::string endif_label = create_endif_label();
@@ -466,21 +472,6 @@ statement:      identifier ASSIGN expression DOT {
 
                     $$ = node;
                 }
-                | IF IDENT LEFT_BRACE statement RIGHT_BRACE else {
-                    // PHASE 4, just for testing, needs to be changed
-                    CodeNode *node = new CodeNode;
-                    $$ = node;
-                }
-                | WHILE boolexp LEFT_BRACE statement RIGHT_BRACE {
-                    // PHASE 4, just for testing, needs to be changed
-                    CodeNode *node = new CodeNode;
-                    $$ = node;
-                }
-                | IF boolexp LEFT_BRACE statements RIGHT_BRACE else {
-                    // PHASE 4, just for testing, needs to be changed
-                    CodeNode *node = new CodeNode;
-                    $$ = node;
-                }
                 | IF IDENT LEFT_BRACE statements RIGHT_BRACE else {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
@@ -492,7 +483,7 @@ statement:      identifier ASSIGN expression DOT {
                     $$ = node;
                 }
                 | READ LEFT_PARAN var RIGHT_PARAN DOT {
-                    // reads from std_input and writes it into a variable
+                    // Reads from std_input and writes it into a variable
                     CodeNode *node = new CodeNode;
                     CodeNode *dest = $3;
                     // Output statement: .< dst
