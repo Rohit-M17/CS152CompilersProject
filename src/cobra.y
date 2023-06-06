@@ -187,6 +187,16 @@ std::string decl_temp_code(std::string &temp) {
     return std::string(". ") + temp + std::string("\n");
 }
 
+// Function to generate the code that creates a branch statement
+std::string branch_code(std::string &label) {
+    return std::string(":= ") + label + std::string("\n");
+}
+
+// Function to generate the code that declares a label
+std::string decl_label_code(std::string &label) {
+    return std::string(": ") + label + std::string("\n");
+}
+
 // Function to check if a function has been defined
 bool is_function_defined(const std::string &functionName) {
     for (int i=0; i<symbol_table.size(); i++) {
@@ -424,35 +434,35 @@ statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     std::string if_true_label = create_if_label();
                     std::string endif_label = create_endif_label();
-                    CodeNode *bool = $2;
+                    CodeNode *condition = $2;
                     CodeNode *if_statements = $4;
                     CodeNode *else_statements = $6;
 
                     // If Statement:  ?:= label, predicate        if predicate is true (1) goto label
                     //                : label
                     // Recursion to evaluate the condition and create if_true branch statement
-                    node->code = bool->code + std::string("?:= ") + if_true_label + std::string(", ") + bool->name + std::string("\n");
+                    node->code = condition->code + std::string("?:= ") + if_true_label + std::string(", ") + condition->name + std::string("\n");
 
                     // Branch to endif or else  := label          goto label
                     std::string else_label = else_statements->name;
                     if (else_label != "") {
-                        node->code += std::string(":= ") + else_label + std::string("\n");
+                        node->code += branch_code(else_label);
                     } else {
-                        node->code += std::string(":= ") + endif_label + std::string("\n");
+                        node->code += branch_code(endif_label);
                     }
 
                     // If statements code
-                    node->code += std::string(": ") + if_true_label + std::string("\n") + if_statements->code;
+                    node->code += decl_label_code(if_true_label) + if_statements->code;
                     // Branch to endif if there is an else
                     if (else_label != "") {
-                        node->code += std::string(":= ") + endif_label + std::string("\n");
+                        node->code += branch_code(endif_label);
                     }
 
                     // Else statements code
                     node->code += else_statements->code;
 
                     // endif label
-                    node->code += std::string(": ") + endif_label + std::string("\n");
+                    node->code += decl_label_code(endif_label);
 
                     $$ = node;
                 }
@@ -527,7 +537,7 @@ else:           %empty {
                     std::string else_label = create_else_label();
                     CodeNode *else_statements = $3;
 
-                    node->code = std::string(": ") + else_label + std::string("\n");
+                    node->code = decl_label_code(else_label);
                     node->code += else_statements->code;
                     node->name = else_label;
                     $$ = node;
