@@ -152,6 +152,36 @@ std::string create_temp() {
     return value;
 }
 
+// Function to create an if label
+std::string create_if_label() {
+    static int num = 0;
+    std::stringstream ss;
+    ss << num;
+    std::string value = "if_true" + ss.str();
+    num += 1;
+    return value;
+}
+
+// Function to create an endif label
+std::string create_endif_label() {
+    static int num = 0;
+    std::stringstream ss;
+    ss << num;
+    std::string value = "endif" + ss.str();
+    num += 1;
+    return value;
+}
+
+// Function to create an else label
+std::string create_else_label() {
+    static int num = 0;
+    std::stringstream ss;
+    ss << num;
+    std::string value = "else" + ss.str();
+    num += 1;
+    return value;
+}
+
 // Function to generate the code that creates a temporary variable
 std::string decl_temp_code(std::string &temp) {
     return std::string(". ") + temp + std::string("\n");
@@ -368,7 +398,7 @@ statement:      identifier ASSIGN expression DOT {
                     CodeNode *index = $3;
                     CodeNode *source = $6;
                     node->code = index->code + source->code;
-                    // Array assignment: []= dst, index, src
+                    // Array assignment:  []= dst, index, src
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + source->name + std::string("\n");
                     std::string error;
                     if (!find(id, Array, error)) {
@@ -382,7 +412,7 @@ statement:      identifier ASSIGN expression DOT {
                     CodeNode *index = $3;
                     CodeNode *call = $6;
                     node->code = index->code + call->code;
-                    // Array assignment: []= dst, index, src
+                    // Array assignment:  []= dst, index, src
                     node->code += std::string("[]= ") + id + std::string(", ") + index->name + std::string(", ") + call->name + std::string("\n");
                     std::string error;
                     if (!find(id, Array, error)) {
@@ -391,10 +421,39 @@ statement:      identifier ASSIGN expression DOT {
                     $$ = node;
                 }
                 | IF boolexp LEFT_BRACE statement RIGHT_BRACE else {
-                    // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
-                    CodeNode *test_bool = $2;
-                    node->code += test_bool->code + std::string("\n");
+                    std::string if_true_label = create_if_label();
+                    std::string endif_label = create_endif_label();
+                    CodeNode *bool = $2;
+                    CodeNode *if_statements = $4;
+                    CodeNode *else_statements = $6;
+
+                    // If Statement:  ?:= label, predicate        if predicate is true (1) goto label
+                    //                : label
+                    // Recursion to evaluate the condition and create if_true branch statement
+                    node->code = bool->code + std::string("?:= ") + if_true_label + std::string(", ") + bool->name + std::string("\n");
+
+                    // Branch to endif or else  := label          goto label
+                    std::string else_label = else_statements->name;
+                    if (else_label != "") {
+                        node->code += std::string(":= ") + else_label + std::string("\n");
+                    } else {
+                        node->code += std::string(":= ") + endif_label + std::string("\n");
+                    }
+
+                    // If statements code
+                    node->code += std::string(": ") + if_true_label + std::string("\n") + if_statements->code;
+                    // Branch to endif if there is an else
+                    if (else_label != "") {
+                        node->code += std::string(":= ") + endif_label + std::string("\n");
+                    }
+
+                    // Else statements code
+                    node->code += else_statements->code;
+
+                    // endif label
+                    node->code += std::string(": ") + endif_label + std::string("\n");
+
                     $$ = node;
                 }
                 | IF IDENT LEFT_BRACE statement RIGHT_BRACE else {
@@ -460,11 +519,17 @@ statement:      identifier ASSIGN expression DOT {
 
 else:           %empty {
                     CodeNode *node = new CodeNode;
+                    node->name = "";
                     $$ = node;
                 }
                 | ELSE LEFT_BRACE statements RIGHT_BRACE {
-                    // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
+                    std::string else_label = create_else_label();
+                    CodeNode *else_statements = $3;
+
+                    node->code = std::string(": ") + else_label + std::string("\n");
+                    node->code += else_statements->code;
+                    node->name = else_label;
                     $$ = node;
                 }
                 ;
