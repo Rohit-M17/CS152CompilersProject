@@ -208,6 +208,7 @@ bool is_function_defined(const std::string &functionName) {
 %type   <code_node>     multexpr
 %type   <code_node>     term
 %type   <code_node>     var
+%type   <code_node>     comp
 
 %type   <ident_val>     identifier
 %type   <ident_val>     function_ident
@@ -244,8 +245,6 @@ functions:      %empty {
 function:       FUNCTION function_ident DOT BEGIN_PARAMS parameters END_PARAMS BEGIN_LOCALS declarations END_LOCALS BEGIN_BODY statements END_BODY {
                     CodeNode *node = new CodeNode;
                     std::string func_name = $2;
-                    // **** We have add a check so that the function name is not a reserved word like mult or sum ****
-                    //add_function_to_symbol_table(func_name);
                     node->code = "";
                     // Add function name
                     node->code += std::string("func ") + func_name + std::string("\n");
@@ -298,7 +297,6 @@ declarations:   %empty {
 declaration:    identifier COLON DIGIT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
-                    // **** implement error catch, check that the variable name is not a reserved keyword ****
                     add_variable_to_symbol_table(id, Integer);
                     // Variable declaration: . name
                     node->code = std::string(". ") + id + std::string("\n");
@@ -311,7 +309,6 @@ declaration:    identifier COLON DIGIT {
                     std::stringstream ss;
                     ss << $8;
                     std::string size = ss.str();
-                    // **** implement error catch, check that the variable name is not a reserved keyword ****
                     add_variable_to_symbol_table(id, Array);
                     // Array declaration: .[] name, n
                     node->code = std::string(".[] ") + id + std::string(", ") + size + std::string("\n");
@@ -396,6 +393,8 @@ statement:      identifier ASSIGN expression DOT {
                 | IF boolexp LEFT_BRACE statement RIGHT_BRACE else {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
+                    CodeNode *test_bool = $2;
+                    node->code += test_bool->code + std::string("\n");
                     $$ = node;
                 }
                 | IF IDENT LEFT_BRACE statement RIGHT_BRACE else {
@@ -509,8 +508,16 @@ arguments:      %empty {
                 ;
 
 boolexp:        expression comp expression {
-                    // PROVISIONAL, just for testing, needs to be changed
+                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    CodeNode *src1 = $1;
+                    CodeNode *op = $2;
+                    CodeNode *src2 = $3;
+                    // Recursion and create temporary variable
+                    node->code = src1->code + src2->code + decl_temp_code(temp);
+                    // Comparison operator statements: < dst, src1, src2
+                    node->code += op->name + std::string(" ") + temp + std::string(", ") + src1->name + std::string(", ") + src2->name + std::string("\n");
+                    node->name = temp;
                     $$ = node;
                 }
                 | NOT expression comp expression {
@@ -520,12 +527,42 @@ boolexp:        expression comp expression {
                 }
                 ;
 
-comp:           EQ     {  }
-                | LT   {  }
-                | GT   {  }
-                | LTE  {  }
-                | GTE  {  }
-                | NEQ  {  }
+comp:           EQ {
+                    CodeNode *node = new CodeNode;
+                    node->code = "";
+                    node->name = "==";
+                    $$ = node;
+                }
+                | LT {
+                    CodeNode *node = new CodeNode;
+                    node->code = "";
+                    node->name = "<";
+                    $$ = node;
+                }
+                | GT {
+                    CodeNode *node = new CodeNode;
+                    node->code = "";
+                    node->name = ">";
+                    $$ = node;
+                }
+                | LTE {
+                    CodeNode *node = new CodeNode;
+                    node->code = "";
+                    node->name = "<=";
+                    $$ = node;
+                }
+                | GTE {
+                    CodeNode *node = new CodeNode;
+                    node->code = "";
+                    node->name = ">=";
+                    $$ = node;
+                }
+                | NEQ {
+                    CodeNode *node = new CodeNode;
+                    node->code = "";
+                    node->name = "!=";
+                    $$ = node;
+                }
                 ;
 
 expression:     multexpr { $$ = $1; }
@@ -567,7 +604,7 @@ multexpr:       term { $$ = $1; }
                     node->code += std::string("* ") + temp + std::string(", ") + leftexpr->name + std::string(", ") + rightexpr->name + std::string("\n");
                     node->name = temp;
                     $$ = node;
-                  }
+                }
                 | term DIV term {
                     CodeNode *node = new CodeNode;
                     std::string temp = create_temp();

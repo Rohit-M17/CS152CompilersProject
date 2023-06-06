@@ -15,5 +15,8 @@ body {
 
   // Addition, answer is 150, since 150 = 100+50
   c = a sum b.
-  shout(c).
+
+  such c greaterorequal 100 {
+      shout(c).
+  }
 } body
