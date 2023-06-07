@@ -147,18 +147,6 @@ bool has_main() {
     return TF;
 }
 
-// Function to push a loop label onto the stack
-void pushLoopLabel(const std::string& label) {
-    loopLabelStack.push(label);
-    printf("METHOD TO PUSH HAS RUN\n");
-}
-
-// Function to pop a loop label from the stack
-void popLoopLabel() {
-    loopLabelStack.pop();
-    printf("METHOD TO POP HAS RUN\n");
-}
-
 // Function to create a temporary variable (register)
 std::string create_temp() {
     static int num = 0;
@@ -206,7 +194,7 @@ std::string create_loopstart_label(){
         ss << num;
         std::string value = "beginloop" + ss.str();
         num += 1;
-        return value;
+        return value; 
 }
 
 // Function to create loopbody label
@@ -255,6 +243,18 @@ bool is_function_defined(const std::string &functionName) {
     return false;
 }
 
+// Function to push a loop label onto the stack
+void pushLoopLabel(const std::string& label) {
+    loopLabelStack.push(label);
+    printf("METHOD TO PUSH HAS RUN\n");
+}
+
+// Function to pop a loop label from the stack
+void popLoopLabel() {
+    loopLabelStack.pop();
+    printf("METHOD TO POP HAS RUN\n");
+}
+
 %}
 
 
@@ -299,8 +299,6 @@ bool is_function_defined(const std::string &functionName) {
 %type   <code_node>     comp
 %type   <code_node>     if_statements
 %type   <code_node>     loop_statements
-%type   <code_node>     loop_statement
-%type   <code_node>     loop_stop_statement
 
 %type   <ident_val>     identifier
 %type   <ident_val>     function_ident
@@ -434,13 +432,7 @@ if_statements:  statement statements {
                 }
                 ;
 
-loop_statements: loop_statement {
-                    CodeNode *statement = $1;
-                    CodeNode *node = new CodeNode;
-                    node->code = statement->code;
-                    $$ = node;
-                }
-                | loop_statement loop_statements {
+loop_statements: statement statements {
                     CodeNode *statement = $1;
                     CodeNode *statements = $2;
                     CodeNode *node = new CodeNode;
@@ -448,37 +440,6 @@ loop_statements: loop_statement {
                     $$ = node;
                 }
                 ;
-
-loop_statement: statement {
-                    CodeNode *statement = $1;
-                    CodeNode *node = new CodeNode;
-                    node->code = statement->code;
-                    $$ = node;
-                }
-                | CONTINUE DOT {
-                    CodeNode *node = new CodeNode;
-                    node->code = std::string("continue\n");
-                    $$ = node;
-                }
-                | loop_stop_statement {
-                    $$ = $1;
-                }
-                ;
-
-loop_stop_statement: STOP DOT {
-                         CodeNode* node = new CodeNode;
-                         // Get the top loop label from the stack and generate the code accordingly
-                         if (!loopLabelStack.empty()) {
-                             std::string loopLabel = loopLabelStack.top();
-                             node->code = branch_code(loopLabel);
-                         } else {
-                             // Handle error: STOP statement encountered without an active loop
-                             // You can throw an exception, print an error message, or handle it as per your requirements
-                             node->code = std::string("ERROR else reached in STOP\n");
-                         }
-                         $$ = node;
-                     }
-                     ;
 
 statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
@@ -581,7 +542,7 @@ statement:      identifier ASSIGN expression DOT {
 
                     // Push the beginloop_label onto the loop label stack
                     //pushLoopLabel(endloop_label);
-
+                    
                     // While Statement:  ?:= label, predicate      while predicate is true (1) goto label
                     //                : label
                     // Recursion to evaluate the condition and create beginloop branch statement
@@ -590,7 +551,7 @@ statement:      identifier ASSIGN expression DOT {
 
                     // While statements code
                     node->code += decl_label_code(whileloop_label) + while_statements->code;
-
+               
                     // jump to beginning of loop
                     node->code += branch_code(beginloop_label);
                     // endloop label
@@ -598,7 +559,7 @@ statement:      identifier ASSIGN expression DOT {
                     // Pop the loop label from the stack
                     popLoopLabel();
                     $$ = node;
-
+                
                 }
                 | READ LEFT_PARAN var RIGHT_PARAN DOT {
                     // Reads from std_input and writes it into a variable
@@ -622,6 +583,24 @@ statement:      identifier ASSIGN expression DOT {
                     // Output statement: ret src
                     node->code = expression->code;
                     node->code += std::string("ret ") + expression->name + std::string("\n");
+                    $$ = node;
+                }
+                | CONTINUE DOT {
+                    CodeNode *node = new CodeNode;
+                    node->code = std::string("continue\n");
+                    $$ = node;
+                }
+                | STOP DOT {
+                    CodeNode* node = new CodeNode;
+                    // Get the top loop label from the stack and generate the code accordingly
+                    if (!loopLabelStack.empty()) {
+                        std::string loopLabel = loopLabelStack.top();
+                        node->code = branch_code(loopLabel);
+                    } else {
+                        // Handle error: STOP statement encountered without an active loop
+                        // You can throw an exception, print an error message, or handle it as per your requirements
+                        node->code = std::string("ERROR else reached in STOP\n");
+                    }
                     $$ = node;
                 }
                 ;
