@@ -1,25 +1,21 @@
+// This is a simple loop with a break statement
+
 funct main.
 
 params {
 } params
 
 locals {
-  a : digit.
-  b : digit.
-  c : digit.
+  i : digit.
 } locals
 
 body {
-  a = 100.
-  b = 50.
 
-  such a lessthan b {
-      c = b.
-    }
-    next {
-      c = a.
-    }
-
-    shout(c).  // This should print out 100
+  i = 0.
+  during i lessorequal 10 {
+    shout(i).
+    stop.
+    i = i sum 1.
+  }
 
 } body

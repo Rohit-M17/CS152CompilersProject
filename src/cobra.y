@@ -461,7 +461,7 @@ loop_statement: statement {
                     // Get the top loop label from the stack and generate the code accordingly
                     if (!loopLabelStack.empty()) {
                         std::string loopLabel = loopLabelStack.top();
-                        node->code = "goto " + loopLabel + ";\n";
+                        node->code = branch_code(loopLabel);
                     } else {
                         // Handle error: STOP statement encountered without an active loop
                         // You can throw an exception, print an error message, or handle it as per your requirements
