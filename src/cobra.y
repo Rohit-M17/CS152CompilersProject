@@ -512,7 +512,25 @@ statement:      identifier ASSIGN expression DOT {
                 | WHILE boolexp LEFT_BRACE loop_statements RIGHT_BRACE {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
+                    std::string while_label = create_while_label();
+                    std::string endwhile_label = create_endwhile_label();
+                    CodeNode *condition = $2;
+                    CodeNode *while_statements = $4;
+
+                    
+                    
+                    // While Statement:  ?:= label, predicate        if predicate is true (1) goto label
+                    //                : label
+                    // Recursion to evaluate the condition and create if_true branch statement
+                    node->code = condition->code + std::string("?:= ") + while_label + std::string(", ") + condition->name + std::string("\n");
+                    
+                    // While statements code
+                    node->code += decl_label_code(while_label) + while_statements->code;
+                    
+                    // endwhile label
+                    node->code += decl_label_code(endwhile_label);
                     $$ = node;
+                
                 }
                 | READ LEFT_PARAN var RIGHT_PARAN DOT {
                     // Reads from std_input and writes it into a variable
