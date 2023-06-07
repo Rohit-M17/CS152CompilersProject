@@ -5,7 +5,7 @@ params {
 
 locals {
   a3:digit arr[] size 20.
-  4b : digit.
+  4b : digit.               // Incorrect variable name declaration (invalid identifier)
   c! : digit.
   errd 44b.
 } locals

@@ -4,7 +4,7 @@ params {
 } params
 
 locals {
-    a = digit arr[] size 20.
+    a = digit arr[] size 20.        // declaration with = instead of :
     b : digit.
 } locals
 

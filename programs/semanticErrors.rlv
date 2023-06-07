@@ -15,4 +15,5 @@ body {
     n = n sum r.                // used array variable "r" is missing a specified index
     n = multiplicate().         // calling a function which has not been defined
     shout(n[1]).                // specifying an array index when using a regular integer variable
+    continue.                   // continue statement not within a loop
 } body

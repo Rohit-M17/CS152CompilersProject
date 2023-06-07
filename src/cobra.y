@@ -19,7 +19,8 @@ extern FILE* yyin;
 bool inputFileHasErrors = false;
 
 // Code to maintain the loop label stack
-std::stack<std::string> loopLabelStack;
+std::stack<std::string> loopEndLabelStack;
+std::stack<std::string> loopBeginLabelStack;
 
 void yyerror_lexical(const char* msg);
 void yyerror(const char* s);
@@ -147,14 +148,24 @@ bool has_main() {
     return TF;
 }
 
-// Function to push a loop label onto the stack
-void pushLoopLabel(const std::string& label) {
-    loopLabelStack.push(label);
+// Function to push a loop end label onto the stack
+void pushLoopBeginLabel(const std::string& label) {
+    loopBeginLabelStack.push(label);
 }
 
-// Function to pop a loop label from the stack
-void popLoopLabel() {
-    loopLabelStack.pop();
+// Function to pop a loop end label from the stack
+void popLoopBeginLabel() {
+    loopBeginLabelStack.pop();
+}
+
+// Function to push a loop end label onto the stack
+void pushLoopEndLabel(const std::string& label) {
+    loopEndLabelStack.push(label);
+}
+
+// Function to pop a loop end label from the stack
+void popLoopEndLabel() {
+    loopEndLabelStack.pop();
 }
 
 // Function to create a temporary variable (register)
@@ -550,10 +561,12 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += branch_code(beginloop_label);
                     // Declare the endloop label
                     node->code += decl_label_code(endloop_label);
-                    // Pop the loop label from the stack
-                    popLoopLabel();
+
+                    // Pop the loop labels from the stack
+                    popLoopBeginLabel();
+                    popLoopEndLabel();
+
                     $$ = node;
-                
                 }
                 | READ LEFT_PARAN var RIGHT_PARAN DOT {
                     // Reads from std_input and writes it into a variable
@@ -580,19 +593,25 @@ statement:      identifier ASSIGN expression DOT {
                     $$ = node;
                 }
                 | CONTINUE DOT {
-                    CodeNode *node = new CodeNode;
-                    //node->code = std::string("continue\n");
+                    CodeNode* node = new CodeNode;
+                    // Get the top loop label from the stack and generate the code
+                    if (!loopBeginLabelStack.empty()) {
+                        std::string loopLabel = loopBeginLabelStack.top();
+                        node->code = branch_code(loopLabel);
+                    } else {
+                        // Continue outside a loop
+                        yyerror_semantic("Continue statement encountered without an active loop");
+                    }
                     $$ = node;
                 }
                 | STOP DOT {
                     CodeNode* node = new CodeNode;
                     // Get the top loop label from the stack and generate the code
-                    if (!loopLabelStack.empty()) {
-                        std::string loopLabel = loopLabelStack.top();
+                    if (!loopEndLabelStack.empty()) {
+                        std::string loopLabel = loopEndLabelStack.top();
                         node->code = branch_code(loopLabel);
                     } else {
-                        // Handle error: STOP statement encountered without an active loop
-                        //node->code = std::string("ERROR else reached in STOP\n");
+                        // Stop outside a loop
                         yyerror_semantic("Stop statement encountered without an active loop");
                     }
                     $$ = node;
@@ -600,11 +619,14 @@ statement:      identifier ASSIGN expression DOT {
                 ;
 
 while_keyword:  WHILE {
+                    // Executes before the rest of the while statement is parsed (bison is a bottom-up parser)
                     CodeNode *node = new CodeNode;
                     std::string loop_num = create_loop_num();
+                    std::string beginloop_label = create_beginloop_label(loop_num);
                     std::string endloop_label = create_endloop_label(loop_num);
-                    // Push the endloop_label onto the loop label stack
-                    pushLoopLabel(endloop_label);
+                    // Push the labels onto the corresponding stack
+                    pushLoopBeginLabel(beginloop_label);
+                    pushLoopEndLabel(endloop_label);
                     node->name = loop_num;
                     $$ = node;
                 }
@@ -666,21 +688,32 @@ arguments:      %empty {
                 ;
 
 boolexp:        expression comp expression {
-                    std::string temp = create_temp();
                     CodeNode *node = new CodeNode;
+                    std::string temp = create_temp();
                     CodeNode *src1 = $1;
                     CodeNode *op = $2;
                     CodeNode *src2 = $3;
                     // Recursion and create temporary variable
                     node->code = src1->code + src2->code + decl_temp_code(temp);
-                    // Comparison operator statements: < dst, src1, src2
+                    // Comparison operator statements:  < dst, src1, src2
                     node->code += op->name + std::string(" ") + temp + std::string(", ") + src1->name + std::string(", ") + src2->name + std::string("\n");
                     node->name = temp;
                     $$ = node;
                 }
                 | NOT expression comp expression {
-                    // PROVISIONAL, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
+                    std::string temp1 = create_temp();
+                    CodeNode *src1 = $2;
+                    CodeNode *op = $3;
+                    CodeNode *src2 = $4;
+                    // Recursion and create temporary variable
+                    node->code = src1->code + src2->code + decl_temp_code(temp1);
+                    // Comparison operator statements:  < dst, src1, src2
+                    node->code += op->name + std::string(" ") + temp1 + std::string(", ") + src1->name + std::string(", ") + src2->name + std::string("\n");
+                    // Not operator statement:  ! dst, src
+                    std::string temp2 = create_temp();
+                    node->code += decl_temp_code(temp2) + std::string("! ") + temp2 + std::string(", ") + temp1 + std::string("\n");
+                    node->name = temp2;
                     $$ = node;
                 }
                 ;
