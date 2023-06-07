@@ -8,8 +8,11 @@
 #include <stdio.h>
 #define YY_DECL int yylex(void)
 #include "cobra.tab.h"
+#include <string>
+#include <sstream>
 
 int currpos = 1;
+extern void yyerror_lexical(const char* msg);
 %}
 
 /* Definitions for regular expressions */
@@ -121,14 +124,26 @@ SIZE "size"
 {RETURN}         { currpos = currpos + yyleng; return RETURN; }
 {SIZE}           { currpos = currpos + yyleng; return SIZE; }
 
-{INVALIDIDENT}   { printf("ERROR: (lexical error) Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
-                    yyerror_lexical("Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
-                    currpos + currpos + yyleng; }
+{INVALIDIDENT}   { std::stringstream line;
+                   line << yylineno;
+                   std::stringstream col;
+                   col << currpos + 1;
+                   std::string message = std::string("Invalid identifier ") + yytext +
+                                         " on line number " + line.str() +
+                                         " and column number " + col.str() + "\n";
+                   yyerror_lexical(message.c_str());
+                   currpos + currpos + yyleng; }
 {IDENT}          { yylval.ident_val = strdup(yytext); currpos = currpos + yyleng; return IDENT; }
 {NUMBER}+        { yylval.number_val = atoi(yytext);  currpos = currpos + yyleng; return NUMBER; }
-.                { printf("ERROR: (lexical error) Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
-                    yyerror_lexical("Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
-                    currpos + currpos + yyleng; }
+.                { std::stringstream line;
+                   line << yylineno;
+                   std::stringstream col;
+                   col << currpos + 1;
+                   std::string message = std::string("Unrecognized symbol ") + yytext +
+                                         " on line number " + line.str() +
+                                         " and column number " + col.str() + "\n";
+                   yyerror_lexical(message.c_str());
+                   currpos + currpos + yyleng; }
 %%
 
 /* 
