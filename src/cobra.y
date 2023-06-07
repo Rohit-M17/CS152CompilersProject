@@ -18,6 +18,9 @@ extern FILE* yyin;
 
 bool inputFileHasErrors = false;
 
+// Code to maintain the loop label stack
+std::stack<std::string> loopLabelStack;
+
 void yyerror_lexical(const char* msg);
 void yyerror(const char* s);
 void yyerror_semantic(const char* msg);
@@ -239,17 +242,16 @@ bool is_function_defined(const std::string &functionName) {
     return false;
 }
 
-// Code to maintain the loop label stack
-std::stack<std::string> loopLabelStack;
-
 // Function to push a loop label onto the stack
 void pushLoopLabel(const std::string& label) {
     loopLabelStack.push(label);
+    printf("METHOD TO PUSH HAS RUN");
 }
 
 // Function to pop a loop label from the stack
 void popLoopLabel() {
     loopLabelStack.pop();
+    printf("METHOD TO POP HAS RUN");
 }
 
 %}
@@ -465,6 +467,7 @@ loop_statement: statement {
                     } else {
                         // Handle error: STOP statement encountered without an active loop
                         // You can throw an exception, print an error message, or handle it as per your requirements
+                        node->code = std::string("ERROR else reached in STOP\n");
                     }
                     $$ = node;
                 }
@@ -568,8 +571,10 @@ statement:      identifier ASSIGN expression DOT {
                     std::string endloop_label = create_endloop_label();
                     CodeNode *condition = $2;
                     CodeNode *while_statements = $4;
+
                     // Push the beginloop_label onto the loop label stack
-                    pushLoopLabel(beginloop_label); 
+                    pushLoopLabel(beginloop_label);
+                    node->code += std::string("PUSHED LABEL\n");
                     
                     // While Statement:  ?:= label, predicate      while predicate is true (1) goto label
                     //                : label
@@ -585,7 +590,8 @@ statement:      identifier ASSIGN expression DOT {
                     // endloop label
                     node->code += decl_label_code(endloop_label);
                     // Pop the loop label from the stack
-                    popLoopLabel();                    
+                    popLoopLabel();
+                    node->code += std::string("POPPED LABEL\n");
                     $$ = node;
                 
                 }
