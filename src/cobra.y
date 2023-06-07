@@ -561,33 +561,33 @@ statement:      identifier ASSIGN expression DOT {
                     $$ = node;
                 }
                 | WHILE boolexp LEFT_BRACE loop_statements RIGHT_BRACE {
-                    CodeNode* node = new CodeNode;
+                    // PHASE 4, just for testing, needs to be changed
+                    CodeNode *node = new CodeNode;
                     std::string beginloop_label = create_loopstart_label();
                     std::string whileloop_label = create_while_label();
                     std::string endloop_label = create_endloop_label();
-                    CodeNode* condition = $2;
-                    CodeNode* while_statements = $4;
-                    
+                    CodeNode *condition = $2;
+                    CodeNode *while_statements = $4;
                     // Push the beginloop_label onto the loop label stack
-                    pushLoopLabel(beginloop_label);
+                    pushLoopLabel(beginloop_label); 
                     
-                    // While Statement: ?:= label, predicate while predicate is true (1) goto label
-                    // : label
+                    // While Statement:  ?:= label, predicate      while predicate is true (1) goto label
+                    //                : label
                     // Recursion to evaluate the condition and create beginloop branch statement
-                    node->code = std::string(": ") + beginloop_label + std::string("\n") + condition->code + std::string("?:=") + whileloop_label + std::string(", ") + condition->name + std::string("\n");
-
-                    // beginloop statements code
-                    node->code += decl_label_code(beginloop_label);
+                    node->code = decl_label_code(beginloop_label) + condition->code + std::string("?:= ") + whileloop_label + std::string(", ") + condition->name + std::string("\n");
+                    node->code += branch_code(endloop_label);
 
                     // While statements code
                     node->code += decl_label_code(whileloop_label) + while_statements->code;
-                
-                    // Jump back to the beginning of the loop if the condition is true
-                    node->code += "if (" + condition->name + ") goto " + beginloop_label + ";\n";
+               
+                    // jump to beginning of loop
+                    node->code += branch_code(beginloop_label);
+                    // endloop label
                     node->code += decl_label_code(endloop_label);
                     // Pop the loop label from the stack
-                    popLoopLabel();
+                    popLoopLabel();                    
                     $$ = node;
+                
                 }
                 | READ LEFT_PARAN var RIGHT_PARAN DOT {
                     // Reads from std_input and writes it into a variable
