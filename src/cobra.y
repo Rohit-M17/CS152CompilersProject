@@ -147,6 +147,18 @@ bool has_main() {
     return TF;
 }
 
+// Function to push a loop label onto the stack
+void pushLoopLabel(const std::string& label) {
+    loopLabelStack.push(label);
+    printf("METHOD TO PUSH HAS RUN\n");
+}
+
+// Function to pop a loop label from the stack
+void popLoopLabel() {
+    loopLabelStack.pop();
+    printf("METHOD TO POP HAS RUN\n");
+}
+
 // Function to create a temporary variable (register)
 std::string create_temp() {
     static int num = 0;
@@ -241,18 +253,6 @@ bool is_function_defined(const std::string &functionName) {
         }
     }
     return false;
-}
-
-// Function to push a loop label onto the stack
-void pushLoopLabel(const std::string& label) {
-    loopLabelStack.push(label);
-    printf("METHOD TO PUSH HAS RUN\n");
-}
-
-// Function to pop a loop label from the stack
-void popLoopLabel() {
-    loopLabelStack.pop();
-    printf("METHOD TO POP HAS RUN\n");
 }
 
 %}
