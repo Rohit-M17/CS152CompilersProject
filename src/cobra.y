@@ -197,34 +197,31 @@ std::string create_else_label() {
     return value;
 }
 
-// Function to create beginloop label
-std::string create_loopstart_label(){
+// Function to create and maintain the loop number count
+std::string create_loop_num(){
         static int num;
         std::stringstream ss;
         ss << num;
-        std::string value = "beginloop" + ss.str();
+        std::string loop_num = ss.str();
         num += 1;
-        return value; 
+        return loop_num;
+}
+
+// Function to create beginloop label
+std::string create_beginloop_label(std::string &num){
+        std::string value = "beginloop" + num;
+        return value;
 }
 
 // Function to create loopbody label
-std::string create_while_label() {
-        static int num;
-        std::stringstream ss;
-        ss << num;
-        std::string value = "loopbody" + ss.str();
-        num += 1;
+std::string create_loopbody_label(std::string &num) {
+        std::string value = "loopbody" + num;
         return value;
 }
 
 // Function to create endloop label
-std::string create_endloop_label() {
-    static int num;
-    std::stringstream ss;
-    ss << num;
-    std::string value = "endloop" + ss.str();
-    num += 1;
-    pushLoopLabel(value);
+std::string create_endloop_label(std::string &num) {
+    std::string value = "endloop" + num;
     return value;
 }
 
@@ -297,6 +294,7 @@ bool is_function_defined(const std::string &functionName) {
 %type   <code_node>     comp
 %type   <code_node>     if_statements
 %type   <code_node>     loop_statements
+%type   <code_node>     while_keyword
 
 %type   <ident_val>     identifier
 %type   <ident_val>     function_ident
@@ -529,27 +527,28 @@ statement:      identifier ASSIGN expression DOT {
 
                     $$ = node;
                 }
-                | WHILE boolexp LEFT_BRACE loop_statements RIGHT_BRACE {
-                    // PHASE 4, just for testing, needs to be changed
+                | while_keyword boolexp LEFT_BRACE loop_statements RIGHT_BRACE {
                     CodeNode *node = new CodeNode;
-                    std::string beginloop_label = create_loopstart_label();
-                    std::string whileloop_label = create_while_label();
-                    std::string endloop_label = create_endloop_label();     // also pushes the endloop_label onto the loop label stack
+                    std::string loop_num = $1->name;
+                    std::string beginloop_label = create_beginloop_label(loop_num);
+                    std::string loopbody_label = create_loopbody_label(loop_num);
+                    std::string endloop_label = create_endloop_label(loop_num);
                     CodeNode *condition = $2;
                     CodeNode *while_statements = $4;
                     
                     // While Statement:  ?:= label, predicate      while predicate is true (1) goto label
-                    //                : label
+                    //                   : label
                     // Recursion to evaluate the condition and create beginloop branch statement
-                    node->code = decl_label_code(beginloop_label) + condition->code + std::string("?:= ") + whileloop_label + std::string(", ") + condition->name + std::string("\n");
+                    node->code = decl_label_code(beginloop_label) + condition->code + std::string("?:= ") + loopbody_label + std::string(", ") + condition->name + std::string("\n");
+                    // Jump to the end of the loop if the condition is not true
                     node->code += branch_code(endloop_label);
 
                     // While statements code
-                    node->code += decl_label_code(whileloop_label) + while_statements->code;
+                    node->code += decl_label_code(loopbody_label) + while_statements->code;
                
-                    // jump to beginning of loop
+                    // Jump to beginning of loop
                     node->code += branch_code(beginloop_label);
-                    // endloop label
+                    // Declare the endloop label
                     node->code += decl_label_code(endloop_label);
                     // Pop the loop label from the stack
                     popLoopLabel();
@@ -582,7 +581,7 @@ statement:      identifier ASSIGN expression DOT {
                 }
                 | CONTINUE DOT {
                     CodeNode *node = new CodeNode;
-                    node->code = std::string("continue\n");
+                    //node->code = std::string("continue\n");
                     $$ = node;
                 }
                 | STOP DOT {
@@ -593,9 +592,20 @@ statement:      identifier ASSIGN expression DOT {
                         node->code = branch_code(loopLabel);
                     } else {
                         // Handle error: STOP statement encountered without an active loop
-                        node->code = std::string("ERROR else reached in STOP\n");
+                        //node->code = std::string("ERROR else reached in STOP\n");
                         yyerror_semantic("Stop statement encountered without an active loop");
                     }
+                    $$ = node;
+                }
+                ;
+
+while_keyword:  WHILE {
+                    CodeNode *node = new CodeNode;
+                    std::string loop_num = create_loop_num();
+                    std::string endloop_label = create_endloop_label(loop_num);
+                    // Push the endloop_label onto the loop label stack
+                    pushLoopLabel(endloop_label);
+                    node->name = loop_num;
                     $$ = node;
                 }
                 ;
