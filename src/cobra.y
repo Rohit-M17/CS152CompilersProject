@@ -472,7 +472,7 @@ statement:      identifier ASSIGN expression DOT {
                     }
                     $$ = node;
                 }
-                | IF boolexp LEFT_BRACE statements RIGHT_BRACE else {
+                | IF boolexp LEFT_BRACE if_statements RIGHT_BRACE else {
                     CodeNode *node = new CodeNode;
                     std::string if_true_label = create_if_label();
                     std::string endif_label = create_endif_label();
@@ -508,12 +508,7 @@ statement:      identifier ASSIGN expression DOT {
 
                     $$ = node;
                 }
-                | IF IDENT LEFT_BRACE statements RIGHT_BRACE else {
-                    // PHASE 4, just for testing, needs to be changed
-                    CodeNode *node = new CodeNode;
-                    $$ = node;
-                }
-                | WHILE boolexp LEFT_BRACE statements RIGHT_BRACE {
+                | WHILE boolexp LEFT_BRACE loop_statements RIGHT_BRACE {
                     // PHASE 4, just for testing, needs to be changed
                     CodeNode *node = new CodeNode;
                     $$ = node;
