@@ -238,6 +238,19 @@ bool is_function_defined(const std::string &functionName) {
     return false;
 }
 
+// Code to maintain the loop label stack
+std::stack<std::string> loopLabelStack;
+
+// Function to push a loop label onto the stack
+void pushLoopLabel(const std::string& label) {
+    loopLabelStack.push(label);
+}
+
+// Function to pop a loop label from the stack
+void popLoopLabel() {
+    loopLabelStack.pop();
+}
+
 %}
 
 
@@ -439,12 +452,19 @@ loop_statement: statement {
                 }
                 | CONTINUE DOT {
                     CodeNode *node = new CodeNode;
-                    //node->code = std::string("continue\n");
+                    node->code = std::string("continue\n");
                     $$ = node;
                 }
                 | STOP DOT {
-                    CodeNode *node = new CodeNode;
-                    //node->code = std::string("stop\n");
+                    CodeNode* node = new CodeNode;
+                    // Get the top loop label from the stack and generate the code accordingly
+                    if (!loopLabelStack.empty()) {
+                        std::string loopLabel = loopLabelStack.top();
+                        node->code = "goto " + loopLabel + ";\n";
+                    } else {
+                        // Handle error: STOP statement encountered without an active loop
+                        // You can throw an exception, print an error message, or handle it as per your requirements
+                    }
                     $$ = node;
                 }
                 ;
