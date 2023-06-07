@@ -594,7 +594,7 @@ statement:      identifier ASSIGN expression DOT {
                     } else {
                         // Handle error: STOP statement encountered without an active loop
                         node->code = std::string("ERROR else reached in STOP\n");
-                        yyerror_semantic(("Stop statement encountered without an active loop").c_str());
+                        yyerror_semantic("Stop statement encountered without an active loop");
                     }
                     $$ = node;
                 }

@@ -1,4 +1,4 @@
-funct notmain.
+funct notmain.                  // not defined a main function
 
 params {
 } params

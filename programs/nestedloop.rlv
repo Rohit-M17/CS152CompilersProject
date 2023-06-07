@@ -1,0 +1,28 @@
+// This is a nested loop 
+
+funct main.
+params {
+} params
+
+locals {
+
+i : digit.
+j : digit.
+
+} locals
+
+body {
+
+  i = 0.
+  during i lessthan 2 {
+
+    j = 1.
+    during j lessorequal 3 {
+      shout(j).
+      j = j + 1.
+    }
+
+    i = i + 1.
+  }
+
+} body
