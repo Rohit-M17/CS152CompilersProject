@@ -1,9 +1,20 @@
-# CS 152 Compiler Design Project - Phase 0
+# CS 152 Compiler Design Project
 
 **Team 14**
 * Rohit Manimaran - 862147396
 * Vishal Menon - 862163065
 * Lorenzo Largacha Sanz - 862396020
+
+## How to run the code
+```
+In your terminal, navigate to the project folder: CS152CompilersProject/src  
+Execute the command:            make  
+And then execute the command:   ./cobra nameOfInputFile  
+  
+For example:                    ./cobra simple.rlv  
+
+Or:                             ./cobra ../programs/array.rlv  
+```
 
 ## Language name
 * cobra

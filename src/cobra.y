@@ -893,7 +893,7 @@ int main(int argc, char *argv[]) {
     }
     yyin = inputFile;
     yyparse();
-    print_symbol_table();
+    //print_symbol_table();
 
     return 0;
 }
