@@ -551,14 +551,17 @@ statement:      identifier ASSIGN expression DOT {
                     // While Statement:  ?:= label, predicate      while predicate is true (1) goto label
                     //                : label
                     // Recursion to evaluate the condition and create beginloop branch statement
-                    node->code = std::string(": ") + beginloop_label + std::string("\n") + condition->code + std::string("?:=") + whileloop_label + std::string(", ") + condition->name + std::string("\n");
+                    node->code = decl_label_code(beginloop_label) + condition->code + std::string("?:= ") + whileloop_label + std::string(", ") + condition->name + std::string("\n");
+                    node->code += branch_code(endloop_label);
 
                     // beginloop statements code
                     node->code += decl_label_code(beginloop_label);                    
 
                     // While statements code
                     node->code += decl_label_code(whileloop_label) + while_statements->code;
-                   
+               
+                    // jump to beginning of loop
+                    node->code += branch_code(beginloop_label);
                     // endloop label
                     node->code += decl_label_code(endloop_label);
                     $$ = node;
