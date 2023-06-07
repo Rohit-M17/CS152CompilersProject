@@ -10,6 +10,7 @@
 #include <string.h>
 #include <sstream>
 #include <stdbool.h>
+#include <stack>
 
 extern int yylex();
 extern int yyparse();
