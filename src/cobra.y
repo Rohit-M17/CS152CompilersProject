@@ -554,9 +554,6 @@ statement:      identifier ASSIGN expression DOT {
                     node->code = decl_label_code(beginloop_label) + condition->code + std::string("?:= ") + whileloop_label + std::string(", ") + condition->name + std::string("\n");
                     node->code += branch_code(endloop_label);
 
-                    // beginloop statements code
-                    node->code += decl_label_code(beginloop_label);                    
-
                     // While statements code
                     node->code += decl_label_code(whileloop_label) + while_statements->code;
                
