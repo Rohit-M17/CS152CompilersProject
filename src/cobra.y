@@ -206,7 +206,7 @@ std::string create_loopstart_label(){
         ss << num;
         std::string value = "beginloop" + ss.str();
         num += 1;
-        return value; 
+        return value;
 }
 
 // Function to create loopbody label
@@ -300,6 +300,7 @@ bool is_function_defined(const std::string &functionName) {
 %type   <code_node>     if_statements
 %type   <code_node>     loop_statements
 %type   <code_node>     loop_statement
+%type   <code_node>     loop_stop_statement
 
 %type   <ident_val>     identifier
 %type   <ident_val>     function_ident
@@ -459,20 +460,25 @@ loop_statement: statement {
                     node->code = std::string("continue\n");
                     $$ = node;
                 }
-                | STOP DOT {
-                    CodeNode* node = new CodeNode;
-                    // Get the top loop label from the stack and generate the code accordingly
-                    if (!loopLabelStack.empty()) {
-                        std::string loopLabel = loopLabelStack.top();
-                        node->code = branch_code(loopLabel);
-                    } else {
-                        // Handle error: STOP statement encountered without an active loop
-                        // You can throw an exception, print an error message, or handle it as per your requirements
-                        node->code = std::string("ERROR else reached in STOP\n");
-                    }
-                    $$ = node;
+                | loop_stop_statement {
+                    $$ = $1;
                 }
                 ;
+
+loop_stop_statement: STOP DOT {
+                         CodeNode* node = new CodeNode;
+                         // Get the top loop label from the stack and generate the code accordingly
+                         if (!loopLabelStack.empty()) {
+                             std::string loopLabel = loopLabelStack.top();
+                             node->code = branch_code(loopLabel);
+                         } else {
+                             // Handle error: STOP statement encountered without an active loop
+                             // You can throw an exception, print an error message, or handle it as per your requirements
+                             node->code = std::string("ERROR else reached in STOP\n");
+                         }
+                         $$ = node;
+                     }
+                     ;
 
 statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
@@ -575,7 +581,7 @@ statement:      identifier ASSIGN expression DOT {
 
                     // Push the beginloop_label onto the loop label stack
                     //pushLoopLabel(endloop_label);
-                    
+
                     // While Statement:  ?:= label, predicate      while predicate is true (1) goto label
                     //                : label
                     // Recursion to evaluate the condition and create beginloop branch statement
@@ -584,7 +590,7 @@ statement:      identifier ASSIGN expression DOT {
 
                     // While statements code
                     node->code += decl_label_code(whileloop_label) + while_statements->code;
-               
+
                     // jump to beginning of loop
                     node->code += branch_code(beginloop_label);
                     // endloop label
@@ -592,7 +598,7 @@ statement:      identifier ASSIGN expression DOT {
                     // Pop the loop label from the stack
                     popLoopLabel();
                     $$ = node;
-                
+
                 }
                 | READ LEFT_PARAN var RIGHT_PARAN DOT {
                     // Reads from std_input and writes it into a variable
