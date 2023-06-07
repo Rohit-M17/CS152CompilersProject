@@ -17,6 +17,7 @@ extern FILE* yyin;
 
 bool inputFileHasErrors = false;
 
+void yyerror_lexical(const char* msg);
 void yyerror(const char* s);
 void yyerror_semantic(const char* msg);
 
@@ -792,6 +793,14 @@ int main(int argc, char *argv[]) {
     print_symbol_table();
 
     return 0;
+}
+
+void yyerror_lexical(const char* msg) {
+    extern int yylineno;
+    extern char *yytext;
+    fprintf(stderr, "ERROR: (lexical error) %s", msg);
+    //inputFileHasErrors = true;
+    exit(1);
 }
 
 void yyerror(const char* s) {

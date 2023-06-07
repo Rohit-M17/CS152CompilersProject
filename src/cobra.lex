@@ -9,7 +9,6 @@
 #define YY_DECL int yylex(void)
 #include "cobra.tab.h"
 
-/*int currline = 1;*/
 int currpos = 1;
 %}
 
@@ -122,10 +121,14 @@ SIZE "size"
 {RETURN}         { currpos = currpos + yyleng; return RETURN; }
 {SIZE}           { currpos = currpos + yyleng; return SIZE; }
 
-{INVALIDIDENT}   { printf("ERROR: (lexical error) Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1); currpos + currpos + yyleng; }
+{INVALIDIDENT}   { printf("ERROR: (lexical error) Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
+                    yyerror_lexical("Invalid identifier %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
+                    currpos + currpos + yyleng; }
 {IDENT}          { yylval.ident_val = strdup(yytext); currpos = currpos + yyleng; return IDENT; }
 {NUMBER}+        { yylval.number_val = atoi(yytext);  currpos = currpos + yyleng; return NUMBER; }
-.                { printf("ERROR: (lexical error) Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1); currpos + currpos + yyleng; }
+.                { printf("ERROR: (lexical error) Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
+                    yyerror_lexical("Unrecognized symbol %s on line number %d and column number %d\n", yytext, yylineno, currpos + 1);
+                    currpos + currpos + yyleng; }
 %%
 
 /* 
