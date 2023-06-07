@@ -214,6 +214,7 @@ std::string create_endloop_label() {
     ss << num;
     std::string value = "endloop" + ss.str();
     num += 1;
+    pushLoopLabel(value);
     return value;
 }
 
@@ -245,13 +246,13 @@ bool is_function_defined(const std::string &functionName) {
 // Function to push a loop label onto the stack
 void pushLoopLabel(const std::string& label) {
     loopLabelStack.push(label);
-    printf("METHOD TO PUSH HAS RUN");
+    printf("METHOD TO PUSH HAS RUN\n");
 }
 
 // Function to pop a loop label from the stack
 void popLoopLabel() {
     loopLabelStack.pop();
-    printf("METHOD TO POP HAS RUN");
+    printf("METHOD TO POP HAS RUN\n");
 }
 
 %}
@@ -573,8 +574,7 @@ statement:      identifier ASSIGN expression DOT {
                     CodeNode *while_statements = $4;
 
                     // Push the beginloop_label onto the loop label stack
-                    pushLoopLabel(beginloop_label);
-                    node->code += std::string("PUSHED LABEL\n");
+                    //pushLoopLabel(endloop_label);
                     
                     // While Statement:  ?:= label, predicate      while predicate is true (1) goto label
                     //                : label
@@ -591,7 +591,6 @@ statement:      identifier ASSIGN expression DOT {
                     node->code += decl_label_code(endloop_label);
                     // Pop the loop label from the stack
                     popLoopLabel();
-                    node->code += std::string("POPPED LABEL\n");
                     $$ = node;
                 
                 }
