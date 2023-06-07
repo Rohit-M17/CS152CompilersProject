@@ -249,6 +249,9 @@ bool is_function_defined(const std::string &functionName) {
 %type   <code_node>     term
 %type   <code_node>     var
 %type   <code_node>     comp
+%type   <code_node>     if_statements
+%type   <code_node>     loop_statements
+%type   <code_node>     loop_statement
 
 %type   <ident_val>     identifier
 %type   <ident_val>     function_ident
@@ -372,7 +375,7 @@ statements:     %empty {
                     $$ = node;
                 }
                 ;
-/*
+
 if_statements:  statement statements {
                     CodeNode *statement = $1;
                     CodeNode *statements = $2;
@@ -381,7 +384,40 @@ if_statements:  statement statements {
                     $$ = node;
                 }
                 ;
-*/
+
+loop_statements: loop_statement {
+                    CodeNode *statement = $1;
+                    CodeNode *node = new CodeNode;
+                    node->code = statement->code;
+                    $$ = node;
+                }
+                | loop_statement loop_statements {
+                    CodeNode *statement = $1;
+                    CodeNode *statements = $2;
+                    CodeNode *node = new CodeNode;
+                    node->code = statement->code + statements->code;
+                    $$ = node;
+                }
+                ;
+
+loop_statement: statement {
+                    CodeNode *statement = $1;
+                    CodeNode *node = new CodeNode;
+                    node->code = statement->code;
+                    $$ = node;
+                }
+                | CONTINUE DOT {
+                    CodeNode *node = new CodeNode;
+                    //node->code = std::string("continue\n");
+                    $$ = node;
+                }
+                | STOP DOT {
+                    CodeNode *node = new CodeNode;
+                    //node->code = std::string("stop\n");
+                    $$ = node;
+                }
+                ;
+
 statement:      identifier ASSIGN expression DOT {
                     CodeNode *node = new CodeNode;
                     std::string id = $1;
@@ -504,16 +540,6 @@ statement:      identifier ASSIGN expression DOT {
                     // Output statement: ret src
                     node->code = expression->code;
                     node->code += std::string("ret ") + expression->name + std::string("\n");
-                    $$ = node;
-                }
-                | CONTINUE DOT {
-                    CodeNode *node = new CodeNode;
-                    node->code = std::string("continue\n");
-                    $$ = node;
-                }
-                | STOP DOT {
-                    CodeNode *node = new CodeNode;
-                    node->code = std::string("stop\n");
                     $$ = node;
                 }
                 ;
