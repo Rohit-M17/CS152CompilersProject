@@ -1,4 +1,4 @@
-// This is a nested loop 
+// This is a nested loop
 
 funct main.
 params {
@@ -19,10 +19,10 @@ body {
     j = 1.
     during j lessorequal 3 {
       shout(j).
-      j = j + 1.
+      j = j sum 1.
     }
 
-    i = i + 1.
+    i = i sum 1.
   }
 
 } body
